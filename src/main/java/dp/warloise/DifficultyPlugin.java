@@ -546,7 +546,7 @@ public class DifficultyPlugin extends JavaPlugin {
                     }
                 }
 
-                //Election 4
+                //Election 4 
                 if (b_election4) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
