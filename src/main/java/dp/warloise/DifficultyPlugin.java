@@ -534,7 +534,7 @@ public class DifficultyPlugin extends JavaPlugin {
                             votador3.damage(5);
                         }
                         estadoEleccion = 0;
-                        b_election1 = false;
+                        b_election3 = false;
                         votoGanador = 0;
                         vote1 = 0;
                         vote2 = 0;
@@ -546,11 +546,11 @@ public class DifficultyPlugin extends JavaPlugin {
                     }
                 }
 
-                //Election 4 
+                //Election 4 Individual
                 if (b_election4) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -603,49 +603,33 @@ public class DifficultyPlugin extends JavaPlugin {
                         }
                     }
                     if (estadoEleccion == 4) {
-                        if (votoGanador == 1) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createEnchantmentBook(3,Enchantment.DURABILITY));
-                            }
-                            estadoEleccion = 0;
-                            b_election4 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-
-                        } else if (votoGanador == 2) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createEnchantmentBook(3,Enchantment.DAMAGE_ALL));
-                            }
-                            estadoEleccion = 0;
-                            b_election4 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-                        } else {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createEnchantmentBook(3,Enchantment.DIG_SPEED));
-                            }
-                            estadoEleccion = 0;
-                            b_election4 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
+                    	for (Player votador1 : vote1List){
+                    		votador1.getInventory().addItem(createEnchantmentBook(3,Enchantment.DURABILITY));
+                    	}
+                		for (Player votador2 : vote2List){
+                			votador2.getInventory().addItem(createEnchantmentBook(3,Enchantment.DAMAGE_ALL));
                         }
+                        for (Player votador3 : vote3List){
+                        	votador3.getInventory().addItem(createEnchantmentBook(3,Enchantment.DIG_SPEED));
+                        }
+                        estadoEleccion = 0;
+                        b_election4 = false;
+                        votoGanador = 0;
+                        vote1 = 0;
+                        vote2 = 0;
+                        vote3 = 0;
+                        contador = 10;
+                        vote1List.clear();
+                        vote2List.clear();
+                        vote3List.clear();
                     }
                 }
 
-                //Election 5
+                //Election 5 Individual
                 if (b_election5) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -698,97 +682,87 @@ public class DifficultyPlugin extends JavaPlugin {
                         }
                     }
                     if (estadoEleccion == 4) {
-                        if (votoGanador == 1) {
-                            //Generar un libro random
-                            ItemStack libroEncantado = new ItemStack(Material.ENCHANTED_BOOK);
-                            EnchantmentStorageMeta metaLibro = (EnchantmentStorageMeta) libroEncantado.getItemMeta();
-                            Enchantment encantamiento = Enchantment.values()[(int) (Math.random() * Enchantment.values().length)];
-                            int nivelEncantamiento = (int) (Math.random() * (encantamiento.getMaxLevel() - 1)) + 1;
+                    	//Generar un libro random
+                        ItemStack libroEncantado = new ItemStack(Material.ENCHANTED_BOOK);
+                        EnchantmentStorageMeta metaLibro = (EnchantmentStorageMeta) libroEncantado.getItemMeta();
+                      //Aqui declaro el libro pero no randomizo
+                        Enchantment encantamiento;
+                        int nivelEncantamiento;
+                        //Declaro la caña de pescar
+                        ItemStack itemCanya=createItem(Material.FISHING_ROD,"Cañatoguapa",1,null,"Esta caña es para que lo passes bien mi rey :)");
+                        addEnchantments(itemCanya, Enchantment.DURABILITY, 3);
+                        addEnchantments(itemCanya,Enchantment.MENDING,1);
+                        addEnchantments(itemCanya,Enchantment.LURE,3);
+                        addEnchantments(itemCanya,Enchantment.LUCK,3);
+                        
+                        int Numrandom;
+                    	
+                    	for (Player votador1 : vote1List){
+                    		encantamiento = Enchantment.values()[(int) (Math.random() * Enchantment.values().length)];
+                            nivelEncantamiento = (int) (Math.random() * (encantamiento.getMaxLevel() - 1)) + 1;
                             assert metaLibro != null;
                             metaLibro.addStoredEnchant(encantamiento, nivelEncantamiento, true);
                             libroEncantado.setItemMeta(metaLibro);
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                for (int i = 0; i < 24; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.COD,"Pesaco",1,null,"Pescaito no frito"));
-                                }
-                                //Dar al jugador un libro random
-                                jugador.getInventory().addItem(libroEncantado);
+                            votador1.getInventory().addItem(libroEncantado);
+                            for (int i = 0; i < 24; i++) {
+                            	votador1.getInventory().addItem(createItem(Material.COD,"Pesaco",1,null,"Pescaito no frito"));
                             }
-                            estadoEleccion = 0;
-                            b_election5 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-
-                        } else if (votoGanador == 2) {
-                            ItemStack itemCanya=createItem(Material.FISHING_ROD,"Cañatoguapa",1,null,"Esta caña es para que lo passes bien mi rey :)");
-                            addEnchantments(itemCanya, Enchantment.DURABILITY, 3);
-                            addEnchantments(itemCanya,Enchantment.MENDING,1);
-                            addEnchantments(itemCanya,Enchantment.LURE,3);
-                            addEnchantments(itemCanya,Enchantment.LUCK,3);
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(itemCanya);
+                    	}
+                		for (Player votador2 : vote2List){
+                			votador2.getInventory().addItem(itemCanya);
+                		}
+                        for (Player votador3 : vote3List){
+                        	Numrandom = (int) (Math.random() * 16) + 1;
+                            for (int i = 0; i < Numrandom; i++) {
+                            	votador3.getInventory().addItem(createItem(Material.STRING,"basura",1,null,"Con amor tu amigo vago"));
                             }
-                            estadoEleccion = 0;
-                            b_election5 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-                        } else {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                int Numrandom = (int) (Math.random() * 16) + 1;
-                                for (int i = 0; i < Numrandom; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.STRING,"basura",1,null,"Con amor tu amigo vago"));
-                                }
-                                Numrandom = (int) (Math.random() * 16) + 1;
-                                for (int i = 0; i < Numrandom; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.LEATHER,"basura",1,null,"Con amor tu amigo vago"));
-                                }
-                                Numrandom = (int) (Math.random() * 16) + 1;
-                                for (int i = 0; i < Numrandom; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.GUNPOWDER,"basura",1,null,"Con amor tu amigo vago"));
-                                }
-                                Numrandom = (int) (Math.random() * 16) + 1;
-                                for (int i = 0; i < Numrandom; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.INK_SAC,"basura",1,null,"Con amor tu amigo vago"));
-                                }
-                                Numrandom = (int) (Math.random() * 16) + 1;
-                                for (int i = 0; i < Numrandom; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.SUGAR,"basura",1,null,"Con amor tu amigo vago"));
-                                }
-                                Numrandom = (int) (Math.random() * 16) + 1;
-                                for (int i = 0; i < Numrandom; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.FLINT,"basura",1,null,"Con amor tu amigo vago"));
-                                }
-                                Numrandom = (int) (Math.random() * 16) + 1;
-                                for (int i = 0; i < Numrandom; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.FEATHER,"basura",1,null,"Con amor tu amigo vago"));
-                                }
-                                Numrandom = (int) (Math.random() * 16) + 1;
-                                for (int i = 0; i < Numrandom; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.CLAY_BALL,"basura",1,null,"Con amor tu amigo vago"));
-                                }
+                            Numrandom = (int) (Math.random() * 16) + 1;
+                            for (int i = 0; i < Numrandom; i++) {
+                            	votador3.getInventory().addItem(createItem(Material.LEATHER,"basura",1,null,"Con amor tu amigo vago"));
                             }
-                            estadoEleccion = 0;
-                            b_election5 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
+                            Numrandom = (int) (Math.random() * 16) + 1;
+                            for (int i = 0; i < Numrandom; i++) {
+                            	votador3.getInventory().addItem(createItem(Material.GUNPOWDER,"basura",1,null,"Con amor tu amigo vago"));
+                            }
+                            Numrandom = (int) (Math.random() * 16) + 1;
+                            for (int i = 0; i < Numrandom; i++) {
+                            	votador3.getInventory().addItem(createItem(Material.INK_SAC,"basura",1,null,"Con amor tu amigo vago"));
+                            }
+                            Numrandom = (int) (Math.random() * 16) + 1;
+                            for (int i = 0; i < Numrandom; i++) {
+                            	votador3.getInventory().addItem(createItem(Material.SUGAR,"basura",1,null,"Con amor tu amigo vago"));
+                            }
+                            Numrandom = (int) (Math.random() * 16) + 1;
+                            for (int i = 0; i < Numrandom; i++) {
+                            	votador3.getInventory().addItem(createItem(Material.FLINT,"basura",1,null,"Con amor tu amigo vago"));
+                            }
+                            Numrandom = (int) (Math.random() * 16) + 1;
+                            for (int i = 0; i < Numrandom; i++) {
+                            	votador3.getInventory().addItem(createItem(Material.FEATHER,"basura",1,null,"Con amor tu amigo vago"));
+                            }
+                            Numrandom = (int) (Math.random() * 16) + 1;
+                            for (int i = 0; i < Numrandom; i++) {
+                            	votador3.getInventory().addItem(createItem(Material.CLAY_BALL,"basura",1,null,"Con amor tu amigo vago"));
+                            }
                         }
+                        estadoEleccion = 0;
+                        b_election5 = false;
+                        votoGanador = 0;
+                        vote1 = 0;
+                        vote2 = 0;
+                        vote3 = 0;
+                        contador = 10;
+                        vote1List.clear();
+                        vote2List.clear();
+                        vote3List.clear();
                     }
                 }
 
-                //Election 6
+                //Election 6 Individual
                 if (b_election6) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -841,74 +815,58 @@ public class DifficultyPlugin extends JavaPlugin {
                         }
                     }
                     if (estadoEleccion == 4) {
-                        if (votoGanador == 1) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                for (int i = 0; i < 16; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.REDSTONE,"Kit Redstone",1,null,"Soy ingeniero siiii"));
-                                    jugador.getInventory().addItem(createItem(Material.REDSTONE,"Kit Redstone",1,null,"Soy ingeniero siiii"));
-                                    jugador.getInventory().addItem(createItem(Material.REDSTONE,"Kit Redstone",1,null,"Soy ingeniero siiii"));
-                                    jugador.getInventory().addItem(createItem(Material.REDSTONE,"Kit Redstone",1,null,"Soy ingeniero siiii"));
-                                    jugador.getInventory().addItem(createItem(Material.STRING,"Kit Redstone",1,null,"Soy ingeniero siiii"));
-                                    jugador.getInventory().addItem(createItem(Material.PISTON,"Kit Redstone",1,null,"Soy ingeniero siiii"));
-                                    jugador.getInventory().addItem(createItem(Material.HOPPER,"Kit Redstone",1,null,"Soy ingeniero siiii"));
-                                    jugador.getInventory().addItem(createItem(Material.SLIME_BALL,"Kit Redstone",1,null,"Soy ingeniero siiii"));
-                                    jugador.getInventory().addItem(createItem(Material.REPEATER,"Kit Redstone",1,null,"Soy ingeniero siiii"));
-                                    jugador.getInventory().addItem(createItem(Material.QUARTZ,"Kit Redstone",1,null,"Soy ingeniero siiii"));
-                                }
+                    	for (Player votador1 : vote1List){
+                    		for (int i = 0; i < 16; i++) {
+                    			votador1.getInventory().addItem(createItem(Material.REDSTONE,"Kit Redstone",1,null,"Soy ingeniero siiii"));
+                    			votador1.getInventory().addItem(createItem(Material.REDSTONE,"Kit Redstone",1,null,"Soy ingeniero siiii"));
+                    			votador1.getInventory().addItem(createItem(Material.REDSTONE,"Kit Redstone",1,null,"Soy ingeniero siiii"));
+                    			votador1.getInventory().addItem(createItem(Material.REDSTONE,"Kit Redstone",1,null,"Soy ingeniero siiii"));
+                    			votador1.getInventory().addItem(createItem(Material.STRING,"Kit Redstone",1,null,"Soy ingeniero siiii"));
+                    			votador1.getInventory().addItem(createItem(Material.PISTON,"Kit Redstone",1,null,"Soy ingeniero siiii"));
+                    			votador1.getInventory().addItem(createItem(Material.HOPPER,"Kit Redstone",1,null,"Soy ingeniero siiii"));
+                    			votador1.getInventory().addItem(createItem(Material.SLIME_BALL,"Kit Redstone",1,null,"Soy ingeniero siiii"));
+                    			votador1.getInventory().addItem(createItem(Material.REPEATER,"Kit Redstone",1,null,"Soy ingeniero siiii"));
+                    			votador1.getInventory().addItem(createItem(Material.QUARTZ,"Kit Redstone",1,null,"Soy ingeniero siiii"));
+                    		}
+                    	}
+                		for (Player votador2 : vote2List){
+                			votador2.getInventory().addItem(createItem(Material.MINECART,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
+                			votador2.getInventory().addItem(createItem(Material.TNT_MINECART,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
+                			for (int i = 0; i < 32; i++) {
+                				votador2.getInventory().addItem(createItem(Material.RAIL,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
+                				votador2.getInventory().addItem(createItem(Material.POWERED_RAIL,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
+                				votador2.getInventory().addItem(createItem(Material.DETECTOR_RAIL,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
+                				votador2.getInventory().addItem(createItem(Material.ACTIVATOR_RAIL,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
                             }
-                            estadoEleccion = 0;
-                            b_election6 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-
-                        } else if (votoGanador == 2) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.MINECART,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
-                                jugador.getInventory().addItem(createItem(Material.TNT_MINECART,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
-                                for (int i = 0; i < 32; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.RAIL,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
-                                    jugador.getInventory().addItem(createItem(Material.POWERED_RAIL,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
-                                    jugador.getInventory().addItem(createItem(Material.DETECTOR_RAIL,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
-                                    jugador.getInventory().addItem(createItem(Material.ACTIVATOR_RAIL,"Kit Transporte",1,null,"Pa que no te duelan las piernas"));
-                                }
-                            }
-                            estadoEleccion = 0;
-                            b_election6 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-                        } else {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                for (int i = 0; i < 32; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.NOTE_BLOCK,"Kit Musica",1,null,"Para que muevas el culo"));
-                                }
-                                jugador.getInventory().addItem(createItem(Material.MUSIC_DISC_5,"Kit Musica",1,null,"Para que muevas el culo"));
-                                jugador.getInventory().addItem(createItem(Material.MUSIC_DISC_11,"Kit Musica",1,null,"Para que muevas el culo"));
-                                jugador.getInventory().addItem(createItem(Material.MUSIC_DISC_CAT,"Kit Musica",1,null,"Para que muevas el culo"));
-                                jugador.getInventory().addItem(createItem(Material.MUSIC_DISC_RELIC,"Kit Musica",1,null,"Para que muevas el culo"));
-                                jugador.getInventory().addItem(createItem(Material.JUKEBOX,"Kit Musica",1,null,"Para que muevas el culo"));
-                            }
-                            estadoEleccion = 0;
-                            b_election6 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
                         }
+                        for (Player votador3 : vote3List){
+                        	for (int i = 0; i < 32; i++) {
+                        		votador3.getInventory().addItem(createItem(Material.NOTE_BLOCK,"Kit Musica",1,null,"Para que muevas el culo"));
+                            }
+                        	votador3.getInventory().addItem(createItem(Material.MUSIC_DISC_5,"Kit Musica",1,null,"Para que muevas el culo"));
+                        	votador3.getInventory().addItem(createItem(Material.MUSIC_DISC_11,"Kit Musica",1,null,"Para que muevas el culo"));
+                        	votador3.getInventory().addItem(createItem(Material.MUSIC_DISC_CAT,"Kit Musica",1,null,"Para que muevas el culo"));
+                        	votador3.getInventory().addItem(createItem(Material.MUSIC_DISC_RELIC,"Kit Musica",1,null,"Para que muevas el culo"));
+                        	votador3.getInventory().addItem(createItem(Material.JUKEBOX,"Kit Musica",1,null,"Para que muevas el culo"));
+                        }
+                        estadoEleccion = 0;
+                        b_election6 = false;
+                        votoGanador = 0;
+                        vote1 = 0;
+                        vote2 = 0;
+                        vote3 = 0;
+                        contador = 10;
+                        vote1List.clear();
+                        vote2List.clear();
+                        vote3List.clear();
                     }
                 }
 
-                //Election 7
+                //Election 7 Individual
                 if (b_election7) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -961,47 +919,32 @@ public class DifficultyPlugin extends JavaPlugin {
                         }
                     }
                     if (estadoEleccion == 4) {
-                        if (votoGanador == 1) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                for (int i = 0; i < 64; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.DIORITE,"Diorita de los dioses",1,null,"Tu si eres una buena persona <3"));
-                                    }
+                    	
+                    	for (Player votador1 : vote1List){
+                    		for (int i = 0; i < 64; i++) {
+                    			votador1.getInventory().addItem(createItem(Material.DIORITE,"Diorita de los dioses",1,null,"Tu si eres una buena persona <3"));
                             }
-                            estadoEleccion = 0;
-                            b_election7 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-
-                        } else if (votoGanador == 2) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                for (int i = 0; i < 64; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.ANDESITE,"Andesita que huele mal",1,null,"Tirala al suelo, no vale nada"));
-                                }
+                    	}
+                        for (Player votador2 : vote2List){
+                        	for (int i = 0; i < 64; i++) {
+                        		votador2.getInventory().addItem(createItem(Material.ANDESITE,"Andesita que huele mal",1,null,"Tirala al suelo, no vale nada"));
                             }
-                            estadoEleccion = 0;
-                            b_election7 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-                        } else {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                for (int i = 0; i < 64; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.GRANITE,"No hace falta ni mencionarlo",1,null,"Que asco de verdad quemalo."));
-                                }
-                            }
-                            estadoEleccion = 0;
-                            b_election7 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
                         }
+                        for (Player votador3 : vote3List){
+                        	for (int i = 0; i < 64; i++) {
+                        		votador3.getInventory().addItem(createItem(Material.GRANITE,"No hace falta ni mencionarlo",1,null,"Que asco de verdad quemalo."));
+                            }
+                        }
+                        estadoEleccion = 0;
+                        b_election7 = false;
+                        votoGanador = 0;
+                        vote1 = 0;
+                        vote2 = 0;
+                        vote3 = 0;
+                        contador = 10;
+                        vote1List.clear();
+                        vote2List.clear();
+                        vote3List.clear();
                     }
                 }
 
