@@ -346,47 +346,59 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
             player.closeInventory();
         }
 
-        //Election 8
+        //Election 8 V
         if (clickedItem.equals(electionItem22)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote1++;
+            
+        	DifficultyPlugin.vote1++;
             player.closeInventory();
         }
         if (clickedItem.equals(electionItem23)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote2++;
+            
+        	DifficultyPlugin.vote2++;
             player.closeInventory();
         }
         if (clickedItem.equals(electionItem24)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote3++;
+            
+        	DifficultyPlugin.vote3++;
             player.closeInventory();
         }
 
-        //Election 9
+        //Election 9 V
         if (clickedItem.equals(electionItem25)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote1++;
+        	if (!vote1List.contains(player)){
+                vote1List.add(player);
+            }
+        	DifficultyPlugin.vote1++;
             player.closeInventory();
         }
         if (clickedItem.equals(electionItem26)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote2++;
+        	if (!vote2List.contains(player)){
+                vote2List.add(player);
+            }
+        	DifficultyPlugin.vote2++;
             player.closeInventory();
         }
         if (clickedItem.equals(electionItem27)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote3++;
+        	if (!vote3List.contains(player)){
+                vote3List.add(player);
+            }
+        	DifficultyPlugin.vote3++;
             player.closeInventory();
         }
 
-        //Election 10
+        //Election 10 V
         if (clickedItem.equals(electionItem28)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
@@ -406,7 +418,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
             player.closeInventory();
         }
 
-        //Election 11
+        //Election 11 V
         if (clickedItem.equals(electionItem31)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
@@ -426,23 +438,32 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
             player.closeInventory();
         }
 
-        //Election 12
+        //Election 12 V
         if (clickedItem.equals(electionItem34)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote1++;
+        	if (!vote1List.contains(player)){
+                vote1List.add(player);
+            }
+        	DifficultyPlugin.vote1++;
             player.closeInventory();
         }
         if (clickedItem.equals(electionItem35)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote2++;
+        	if (!vote2List.contains(player)){
+                vote2List.add(player);
+            }
+        	DifficultyPlugin.vote2++;
             player.closeInventory();
         }
         if (clickedItem.equals(electionItem36)) {
             //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
             //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote3++;
+        	if (!vote3List.contains(player)){
+                vote3List.add(player);
+            }
+        	DifficultyPlugin.vote3++;
             player.closeInventory();
         }
 

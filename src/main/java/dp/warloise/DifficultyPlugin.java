@@ -948,11 +948,11 @@ public class DifficultyPlugin extends JavaPlugin {
                     }
                 }
 
-                //Election 8
+                //Election 8 General
                 if (b_election8) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación General empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -1048,11 +1048,11 @@ public class DifficultyPlugin extends JavaPlugin {
                     }
                 }
 
-                //Election 9
+                //Election 9 Individual
                 if (b_election9) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -1105,72 +1105,57 @@ public class DifficultyPlugin extends JavaPlugin {
                         }
                     }
                     if (estadoEleccion == 4) {
-                        if (votoGanador == 1) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.LAVA_BUCKET,"Parte del conjunto de fuego",1,null,"Cuidado que quema"));
-                                jugador.getInventory().addItem(createEnchantmentBook(4,Enchantment.PROTECTION_FIRE));
-                                jugador.getInventory().addItem(createItem(Material.BOW,"Parte del conjunto de fuego",1,Enchantment.ARROW_FIRE,"Cuidado que quema"));
-                                jugador.getInventory().addItem(createItem(Material.BLAZE_ROD,"Parte del conjunto de fuego",1,null,"Cuidado que quema"));
-                                jugador.getInventory().addItem(createItem(Material.BLAZE_ROD,"Parte del conjunto de fuego",1,null,"Cuidado que quema"));
-                            }
-                            estadoEleccion = 0;
-                            b_election9 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-
-                        } else if (votoGanador == 2) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.AXOLOTL_BUCKET,"Antonio",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createEnchantmentBook(2,Enchantment.FROST_WALKER));
-                                jugador.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                                jugador.getInventory().addItem(createItem(Material.TRIDENT,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
-                            }
-                            estadoEleccion = 0;
-                            b_election9 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-                        } else {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.ELYTRA,"Parte del conjunto de viento",1,null,"Vuela pajarito"));
-                                jugador.getInventory().addItem(createEnchantmentBook(4,Enchantment.PROTECTION_FALL));
-                                for (int i = 0; i < 16; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.ENDER_PEARL,"Parte del conjunto de viento",1,null,"Vuela pajarito"));
-                                }
-                                for (int i = 0; i < 32; i++) {
-                                    jugador.getInventory().addItem(createItem(Material.FIREWORK_ROCKET,"Parte del conjunto de viento",1,null,"Vuela pajarito"));
-                                }
-                            }
-                            estadoEleccion = 0;
-                            b_election9 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
+                    	
+                    	for (Player votador1 : vote1List){
+                    		votador1.getInventory().addItem(createItem(Material.LAVA_BUCKET,"Parte del conjunto de fuego",1,null,"Cuidado que quema"));
+                    		votador1.getInventory().addItem(createEnchantmentBook(4,Enchantment.PROTECTION_FIRE));
+                    		votador1.getInventory().addItem(createItem(Material.BOW,"Parte del conjunto de fuego",1,Enchantment.ARROW_FIRE,"Cuidado que quema"));
+                    		votador1.getInventory().addItem(createItem(Material.BLAZE_ROD,"Parte del conjunto de fuego",1,null,"Cuidado que quema"));
+                    		votador1.getInventory().addItem(createItem(Material.BLAZE_ROD,"Parte del conjunto de fuego",1,null,"Cuidado que quema"));
+                    	}
+                        for (Player votador2 : vote2List){
+                        	votador2.getInventory().addItem(createItem(Material.AXOLOTL_BUCKET,"Antonio",1,null,"Cuidado que moja"));
+                        	votador2.getInventory().addItem(createEnchantmentBook(2,Enchantment.FROST_WALKER));
+                        	votador2.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
+                        	votador2.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
+                        	votador2.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
+                        	votador2.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
+                        	votador2.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
+                        	votador2.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
+                        	votador2.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
+                        	votador2.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
+                        	votador2.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
+                        	votador2.getInventory().addItem(createItem(Material.SNOWBALL,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
+                            votador2.getInventory().addItem(createItem(Material.TRIDENT,"Parte del conjunto de agua",1,null,"Cuidado que moja"));
                         }
+                        for (Player votador3 : vote3List){
+                        	votador3.getInventory().addItem(createItem(Material.ELYTRA,"Parte del conjunto de viento",1,null,"Vuela pajarito"));
+                        	votador3.getInventory().addItem(createEnchantmentBook(4,Enchantment.PROTECTION_FALL));
+                            for (int i = 0; i < 16; i++) {
+                            	votador3.getInventory().addItem(createItem(Material.ENDER_PEARL,"Parte del conjunto de viento",1,null,"Vuela pajarito"));
+                            }
+                            for (int i = 0; i < 32; i++) {
+                            	votador3.getInventory().addItem(createItem(Material.FIREWORK_ROCKET,"Parte del conjunto de viento",1,null,"Vuela pajarito"));
+                            }
+                        }
+                        estadoEleccion = 0;
+                        b_election9 = false;
+                        votoGanador = 0;
+                        vote1 = 0;
+                        vote2 = 0;
+                        vote3 = 0;
+                        contador = 10;
+                        vote1List.clear();
+                        vote2List.clear();
+                        vote3List.clear();
                     }
                 }
-
-                //Election 10
+                        
+                //Election 10 General
                 if (b_election10) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación General empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -1269,11 +1254,11 @@ public class DifficultyPlugin extends JavaPlugin {
                     }
                 }
 
-                //Election 11
+                //Election 11 General
                 if (b_election11) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación General empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -1390,11 +1375,11 @@ public class DifficultyPlugin extends JavaPlugin {
                     }
                 }
 
-                //Election 12
+                //Election 12 Individual
                 if (b_election12) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -1447,43 +1432,28 @@ public class DifficultyPlugin extends JavaPlugin {
                         }
                     }
                     if (estadoEleccion == 4) {
-                        if (votoGanador == 1) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.BOW,"Arco de triunfo",4,Enchantment.ARROW_DAMAGE,"Ponle mas cosas anda..."));
-                            }
-                            estadoEleccion = 0;
-                            b_election12 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-
-                        } else if (votoGanador == 2) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.BOW,"Arco de triunfo",4,Enchantment.ARROW_INFINITE,"Ponle mas cosas anda..."));
-                            }
-                            estadoEleccion = 0;
-                            b_election12 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-                        } else {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                ItemStack item = createItem(Material.BOW,"Arco de triunfo",4,Enchantment.DURABILITY,"Ponle mas cosas anda...");
-                                addEnchantments(item,Enchantment.MENDING,1);
-                                jugador.getInventory().addItem(item);
-                            }
-                            estadoEleccion = 0;
-                            b_election12 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
+                    	for (Player votador1 : vote1List){
+                    		votador1.getInventory().addItem(createItem(Material.BOW,"Arco de triunfo",4,Enchantment.ARROW_DAMAGE,"Ponle mas cosas anda..."));
+                    	}
+                        for (Player votador2 : vote2List){
+                        	votador2.getInventory().addItem(createItem(Material.BOW,"Arco de triunfo",1,Enchantment.ARROW_INFINITE,"Ponle mas cosas anda..."));
+                            
                         }
+                        for (Player votador3 : vote3List){
+                        	ItemStack item = createItem(Material.BOW,"Arco de triunfo",4,Enchantment.DURABILITY,"Ponle mas cosas anda...");
+                            addEnchantments(item,Enchantment.MENDING,1);
+                            votador3.getInventory().addItem(item);                            
+                        }
+                        estadoEleccion = 0;
+                        b_election12 = false;
+                        votoGanador = 0;
+                        vote1 = 0;
+                        vote2 = 0;
+                        vote3 = 0;
+                        contador = 10;
+                        vote1List.clear();
+                        vote2List.clear();
+                        vote3List.clear();
                     }
                 }
 
