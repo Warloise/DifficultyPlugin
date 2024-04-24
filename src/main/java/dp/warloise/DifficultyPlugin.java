@@ -56,6 +56,8 @@ public class DifficultyPlugin extends JavaPlugin {
     public static boolean b_election14=false;
     public static boolean b_election15=false;
     public static boolean b_election16=false;
+    public static boolean b_election17=false;
+    
     public static int estadoEleccion=0;
     public static int votoGanador=0;
     public static int contador=10;
@@ -1022,7 +1024,7 @@ public class DifficultyPlugin extends JavaPlugin {
                                 int xpDelPlayer=jugador.getLevel();
                                 jugador.setLevel(xpDelPlayer+100);
                                 jugador.getInventory().addItem(createItem(Material.LAPIS_LAZULI,"Usarla sabiamente",1,null,"Encantado de ayudarte. jijijiji"));
-                                Objects.requireNonNull(jugador.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(10);
+                                Objects.requireNonNull(jugador.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(jugador.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()/2);
                             }
                             estadoEleccion = 0;
                             b_election8 = false;
@@ -1033,9 +1035,9 @@ public class DifficultyPlugin extends JavaPlugin {
                             contador = 10;
                         } else {
                             for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                Objects.requireNonNull(jugador.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(10);
-                                Objects.requireNonNull(jugador.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(5);
-                                Objects.requireNonNull(jugador.getAttribute(Attribute.GENERIC_ARMOR)).setBaseValue(10);
+                                Objects.requireNonNull(jugador.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(jugador.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()/2);                                
+                                Objects.requireNonNull(jugador.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(jugador.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getBaseValue()+5);                                
+                                Objects.requireNonNull(jugador.getAttribute(Attribute.GENERIC_ARMOR)).setBaseValue(jugador.getAttribute(Attribute.GENERIC_ARMOR).getBaseValue()+10);
                             }
                             estadoEleccion = 0;
                             b_election8 = false;
@@ -1641,11 +1643,11 @@ public class DifficultyPlugin extends JavaPlugin {
                     }
                 }
 
-                //Election 15
+                //Election 15 General
                 if (b_election15) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación General empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -1738,11 +1740,11 @@ public class DifficultyPlugin extends JavaPlugin {
                     }
                 }
 
-                //Election 16
+                //Election 16 General
                 if (b_election16) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación General empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -1824,6 +1826,93 @@ public class DifficultyPlugin extends JavaPlugin {
                             vote3 = 0;
                             contador = 10;
                         }
+                    }
+                }
+              //Election 17 Individual
+                if (b_election17) {
+                    if (estadoEleccion == 0) {
+                        for (Player jugador : Bukkit.getOnlinePlayers()) {
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
+                        }
+                        contador--;
+                        if (contador == 0) {
+                            estadoEleccion = 1;
+                        }
+                    }
+                    if (estadoEleccion == 1) {
+                        for (Player jugador : Bukkit.getOnlinePlayers()) {
+                            jugador.openInventory(createMenu17());
+                        }
+                        estadoEleccion = 2;
+                    }
+                    if (estadoEleccion == 2) {
+                        tiempoCooldown--;
+                        for (Player jugador : Bukkit.getOnlinePlayers()) {
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix + "La votación termina en: " + tiempoCooldown));
+                        }
+                        if (tiempoCooldown <= 0) {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.closeInventory();
+                            }
+                            tiempoCooldown = 30;
+                            estadoEleccion = 3;
+                        }
+                    }
+                    if (estadoEleccion == 3) {
+                        maxVotes = Math.max(vote1, vote2);
+                        maxVotes = Math.max(maxVotes, vote3);
+                        if (maxVotes == vote1) {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto1"));
+                                votoGanador = 1;
+                            }
+                            estadoEleccion = 4;
+                            maxVotes = 0;
+                        } else if (maxVotes == vote2) {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto2"));
+                                votoGanador = 2;
+                            }
+                            estadoEleccion = 4;
+                            maxVotes = 0;
+                        } else {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto3"));
+                                votoGanador = 3;
+                            }
+                            estadoEleccion = 4;
+                            maxVotes = 0;
+                        }
+                    }
+                    if (estadoEleccion == 4) {
+                    	
+                    	for (Player votador1 : vote1List){
+                    		for (int i=0;i<32;i++) {
+                    			votador1.getInventory().addItem(createItem(Material.COBBLESTONE,"Roca normal",1,null,"Gana a las tijeras,","Weno las aplasta vaya"));
+                    		}
+                    		Objects.requireNonNull(votador1.getAttribute(Attribute.GENERIC_ARMOR)).setBaseValue(votador1.getAttribute(Attribute.GENERIC_ARMOR).getBaseValue()+1); 
+                    	}
+                        for (Player votador2 : vote2List){
+                        	for (int i=0;i<16;i++) {
+                        		votador2.getInventory().addItem(createItem(Material.PAPER,"Papel normal",1,null,"Gana a la piedra,","Weno las envuelve en amor."));
+                        	}
+                        	Objects.requireNonNull(votador2.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(votador2.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue()+0.05);
+
+                        }
+                        for (Player votador3 : vote3List){
+                        	votador3.getInventory().addItem(createItem(Material.SHEARS,"Tijeras normales",1,null,"Ganan al papel,","Weno lo corta sin mas"));
+                    		Objects.requireNonNull(votador3.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(votador3.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getBaseValue()+1);
+                        }
+                        estadoEleccion = 0;
+                        b_election17 = false;
+                        votoGanador = 0;
+                        vote1 = 0;
+                        vote2 = 0;
+                        vote3 = 0;
+                        contador = 10;
+                        vote1List.clear();
+                        vote2List.clear();
+                        vote3List.clear();
                     }
                 }
 
