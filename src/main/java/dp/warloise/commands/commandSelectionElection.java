@@ -85,6 +85,15 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
                     break;
                 case 17:
                 	b_election17 = true;
+                    break;
+                case 18:
+                    if ((Bukkit.getOnlinePlayers().size()%2)==0){
+                        b_election18 = true;
+                    }else{
+                        b_election10 = true;
+                    }
+                    break;
+
             }
         }
         if (args[0].equals("election1")){
@@ -142,6 +151,13 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         if (args[0].equals("election17")){
             b_election17=true;
         }
+        if (args[0].equals("election18")){
+            if ((Bukkit.getOnlinePlayers().size()%2)==0){
+                b_election18 = true;
+            }else{
+                b_election10 = true;
+            }
+        }
         return true;
     }
     @Override
@@ -166,6 +182,7 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
             completions.add("election15");
             completions.add("election16");
             completions.add("election17");
+            completions.add("election18");
 
         }
         // Return a list of completions based on the user's input

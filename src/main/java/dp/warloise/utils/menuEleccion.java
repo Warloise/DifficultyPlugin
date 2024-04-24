@@ -107,6 +107,10 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     static ItemStack electionItem50 = createItem(Material.PAPER, "Papel",1,null, "Gana a la piedra, recibiras: ","-> 16 de papel","+0.05 velocidad hasta morir");
     static ItemStack electionItem51 = createItem(Material.SHEARS, "Tijeras",1,null, "Gana al papel,recibiras: ","-> 1 Tijeras","-> +1 ataque base hasta morir");
 
+    static ItemStack electionItem52 = createItem(Material.EMERALD, "Casar",1,null, "Recibiras un huevo de aldeano ", "y esmeraldas", "¡para que disfrutes de tu amor!");
+    static ItemStack electionItem53 = createItem(Material.IRON_AXE, "Matar",1,null, "Recibiras un huevo de golem de hierro ","dile que mate a otro por ti","o pidele protección, depende de ti.");
+    static ItemStack electionItem54 = createItem(Material.ARROW, "Besar",1,null, "Gana al papel,recibiras: ","-> 1 Tijeras","-> +1 ataque base hasta morir");
+
 
 
 

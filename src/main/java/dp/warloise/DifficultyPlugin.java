@@ -57,7 +57,10 @@ public class DifficultyPlugin extends JavaPlugin {
     public static boolean b_election15=false;
     public static boolean b_election16=false;
     public static boolean b_election17=false;
-    
+    public static boolean b_election18=false;
+
+
+
     public static int estadoEleccion=0;
     public static int votoGanador=0;
     public static int contador=10;
@@ -1915,6 +1918,10 @@ public class DifficultyPlugin extends JavaPlugin {
                         vote3List.clear();
                     }
                 }
+
+
+
+
 
             }
         }.runTaskTimer(this,0,20); // 0 indica que la tarea comenzará en el próximo tick
