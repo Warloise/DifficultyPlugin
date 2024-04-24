@@ -1457,11 +1457,11 @@ public class DifficultyPlugin extends JavaPlugin {
                     }
                 }
 
-                //Election 13
+                //Election 13 Individual
                 if (b_election13) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -1514,62 +1514,47 @@ public class DifficultyPlugin extends JavaPlugin {
                         }
                     }
                     if (estadoEleccion == 4) {
-                        if (votoGanador == 1) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.PARROT_SPAWN_EGG,"Ataulfo",1,null,"Cuidado que vuela..."));
-                                jugador.getInventory().addItem(createItem(Material.JUKEBOX,"Pa que bailen las nenas",1,null,"Cuidado que vuela..."));
-                                for (int i = 0; i < 24;i++){
-                                    jugador.getInventory().addItem(createItem(Material.WHEAT_SEEDS,"Plantalas o pa pal pajero",1,null,"Cuidado que vuela..."));
-                                }
-                                for (int i = 0; i < 10;i++){
-                                    jugador.getInventory().addItem(createItem(Material.DIAMOND,"¿Ui de donde han salido?",1,null,"Cuidado que vuela..."));
-                                }
+                    	for (Player votador1 : vote1List){
+                    		votador1.getInventory().addItem(createItem(Material.PARROT_SPAWN_EGG,"Ataulfo",1,null,"Cuidado que vuela..."));
+                    		votador1.getInventory().addItem(createItem(Material.JUKEBOX,"Pa que bailen las nenas",1,null,"Cuidado que vuela..."));
+                            for (int i = 0; i < 24;i++){
+                            	votador1.getInventory().addItem(createItem(Material.WHEAT_SEEDS,"Plantalas o pa pal pajero",1,null,"Cuidado que vuela..."));
                             }
-                            estadoEleccion = 0;
-                            b_election13 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-                        } else if (votoGanador == 2) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.WOLF_SPAWN_EGG,"Adolfo",1,null,"Cuidado que muerde..."));
-                                jugador.getInventory().addItem(createItem(Material.WOLF_SPAWN_EGG,"Rodolfo",1,null,"Cuidado que muerde..."));
-                                for (int i = 0; i < 32;i++){
-                                    jugador.getInventory().addItem(createItem(Material.BONE,"¿Ui de donde han salido?",1,null,"Cuidado que muerde..."));
-                                }
+                            for (int i = 0; i < 10;i++){
+                            	votador1.getInventory().addItem(createItem(Material.DIAMOND,"¿Ui de donde han salido?",1,null,"Cuidado que vuela..."));
                             }
-                            estadoEleccion = 0;
-                            b_election13 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-                        } else {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.HORSE_SPAWN_EGG,"Alonso",1,null,"Cuidado que... no se"));
-                                jugador.getInventory().addItem(createItem(Material.SADDLE,"¡Montalo!",1,null,"Cuidado que... no se"));
-                                jugador.getInventory().addItem(createItem(Material.GOLDEN_APPLE,"Mmmmm...",1,null,"Cuidado que... no se"));
-                                jugador.getInventory().addItem(createItem(Material.GOLDEN_APPLE,"Mmmmm...",1,null,"Cuidado que... no se"));
+                    	}
+                        for (Player votador2 : vote2List){
+                        	votador2.getInventory().addItem(createItem(Material.WOLF_SPAWN_EGG,"Adolfo",1,null,"Cuidado que muerde..."));
+                        	votador2.getInventory().addItem(createItem(Material.WOLF_SPAWN_EGG,"Rodolfo",1,null,"Cuidado que muerde..."));
+                            for (int i = 0; i < 32;i++){
+                            	votador2.getInventory().addItem(createItem(Material.BONE,"¿Ui de donde han salido?",1,null,"Cuidado que muerde..."));
                             }
-                            estadoEleccion = 0;
-                            b_election13 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
                         }
+                        for (Player votador3 : vote3List){
+                        	votador3.getInventory().addItem(createItem(Material.HORSE_SPAWN_EGG,"Alonso",1,null,"Cuidado que... no se"));
+                        	votador3.getInventory().addItem(createItem(Material.SADDLE,"¡Montalo!",1,null,"Cuidado que... no se"));
+                        	votador3.getInventory().addItem(createItem(Material.GOLDEN_APPLE,"Mmmmm...",1,null,"Cuidado que... no se"));
+                        	votador3.getInventory().addItem(createItem(Material.GOLDEN_APPLE,"Mmmmm...",1,null,"Cuidado que... no se"));
+                        }
+                        estadoEleccion = 0;
+                        b_election13 = false;
+                        votoGanador = 0;
+                        vote1 = 0;
+                        vote2 = 0;
+                        vote3 = 0;
+                        contador = 10;
+                        vote1List.clear();
+                        vote2List.clear();
+                        vote3List.clear();
                     }
                 }
-
-                //Election 14
+                
+                //Election 14 Individual
                 if (b_election14) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación empieza en..." + contador));
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
                         }
                         contador--;
                         if (contador == 0) {
@@ -1622,40 +1607,37 @@ public class DifficultyPlugin extends JavaPlugin {
                         }
                     }
                     if (estadoEleccion == 4) {
-                        if (votoGanador == 1) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.SHIELD,"esQdo",1,null,"Jajajaja esta mal escrito"));
-                            }
-                            estadoEleccion = 0;
-                            b_election14 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-                        } else if (votoGanador == 2) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.CROSSBOW,"va ahi esta",1,null,"Jajajaja esta mal escrito"));
-                            }
-                            estadoEleccion = 0;
-                            b_election14 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
-                        } else {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
-                            }
-                            estadoEleccion = 0;
-                            b_election14 = false;
-                            votoGanador = 0;
-                            vote1 = 0;
-                            vote2 = 0;
-                            vote3 = 0;
-                            contador = 10;
+                    	
+                    	for (Player votador1 : vote1List){
+                    		votador1.getInventory().addItem(createItem(Material.SHIELD,"esQdo",1,null,"Jajajaja esta mal escrito"));
+
+                    	}
+                        for (Player votador2 : vote2List){
+                        	votador2.getInventory().addItem(createItem(Material.CROSSBOW,"va ahi esta",1,null,"Jajajaja esta mal escrito"));
                         }
+                        for (Player votador3 : vote3List){
+                        	votador3.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
+                        	votador3.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
+                        	votador3.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
+                        	votador3.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
+                        	votador3.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
+                        	votador3.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
+                        	votador3.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
+                        	votador3.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
+                        	votador3.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
+                        	votador3.getInventory().addItem(createItem(Material.TNT,"Tik tok ace vum",1,null,"Jajajaja esta mal escrito"));
+
+                        }
+                        estadoEleccion = 0;
+                        b_election14 = false;
+                        votoGanador = 0;
+                        vote1 = 0;
+                        vote2 = 0;
+                        vote3 = 0;
+                        contador = 10;
+                        vote1List.clear();
+                        vote2List.clear();
+                        vote3List.clear();
                     }
                 }
 
