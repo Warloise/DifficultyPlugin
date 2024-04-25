@@ -58,6 +58,7 @@ public class DifficultyPlugin extends JavaPlugin {
     public static boolean b_election16=false;
     public static boolean b_election17=false;
     public static boolean b_election18=false;
+    public static boolean b_election19=false;
 
 
 
@@ -1918,9 +1919,181 @@ public class DifficultyPlugin extends JavaPlugin {
                         vote3List.clear();
                     }
                 }
+              //Election 18 Individual
+                if (b_election18) {
+                    if (estadoEleccion == 0) {
+                        for (Player jugador : Bukkit.getOnlinePlayers()) {
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
+                        }
+                        contador--;
+                        if (contador == 0) {
+                            estadoEleccion = 1;
+                        }
+                    }
+                    if (estadoEleccion == 1) {
+                        for (Player jugador : Bukkit.getOnlinePlayers()) {
+                            jugador.openInventory(createMenu18());
+                        }
+                        estadoEleccion = 2;
+                    }
+                    if (estadoEleccion == 2) {
+                        tiempoCooldown--;
+                        for (Player jugador : Bukkit.getOnlinePlayers()) {
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix + "La votación termina en: " + tiempoCooldown));
+                        }
+                        if (tiempoCooldown <= 0) {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.closeInventory();
+                            }
+                            tiempoCooldown = 30;
+                            estadoEleccion = 3;
+                        }
+                    }
+                    if (estadoEleccion == 3) {
+                        maxVotes = Math.max(vote1, vote2);
+                        maxVotes = Math.max(maxVotes, vote3);
+                        if (maxVotes == vote1) {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto1"));
+                                votoGanador = 1;
+                            }
+                            estadoEleccion = 4;
+                            maxVotes = 0;
+                        } else if (maxVotes == vote2) {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto2"));
+                                votoGanador = 2;
+                            }
+                            estadoEleccion = 4;
+                            maxVotes = 0;
+                        } else {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto3"));
+                                votoGanador = 3;
+                            }
+                            estadoEleccion = 4;
+                            maxVotes = 0;
+                        }
+                    }
+                    if (estadoEleccion == 4) {
+                    	
+                    	for (Player votador1 : vote1List){
+                    		for (int i=0;i<8;i++) {
+                    			votador1.getInventory().addItem(createItem(Material.CHEST,"Cofre normal",1,null,"Sisi es normal lo juro"));
+                    		}
+                    	}
+                        for (Player votador2 : vote2List){
+                        	votador2.getInventory().addItem(createItem(Material.ENDER_CHEST,"Cofre del fin",1,null,"¡Picalo con toque de seda melón!","Weno no me hago responsable si lo pierdes..."));
+                        }
+                        for (Player votador3 : vote3List){
+                        	votador3.getInventory().addItem(createItem(Material.SHULKER_BOX,"Un caparazón del Merodeador",1,null,"¿Habia dicho un color?","Mmmm... no lo recuerdo..."));
+                        }
+                        estadoEleccion = 0;
+                        b_election18 = false;
+                        votoGanador = 0;
+                        vote1 = 0;
+                        vote2 = 0;
+                        vote3 = 0;
+                        contador = 10;
+                        vote1List.clear();
+                        vote2List.clear();
+                        vote3List.clear();
+                    }
+                }
+                //Election 19 General
+                if (b_election19) {
+                    if (estadoEleccion == 0) {
+                        for (Player jugador : Bukkit.getOnlinePlayers()) {
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación General empieza en..." + contador));
+                        }
+                        contador--;
+                        if (contador == 0) {
+                            estadoEleccion = 1;
+                        }
+                    }
+                    if (estadoEleccion == 1) {
+                        for (Player jugador : Bukkit.getOnlinePlayers()) {
+                            jugador.openInventory(createMenu19());
+                        }
+                        estadoEleccion = 2;
+                    }
+                    if (estadoEleccion == 2) {
+                        tiempoCooldown--;
+                        for (Player jugador : Bukkit.getOnlinePlayers()) {
+                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix + "La votación termina en: " + tiempoCooldown));
+                        }
+                        if (tiempoCooldown <= 0) {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.closeInventory();
+                            }
+                            tiempoCooldown = 30;
+                            estadoEleccion = 3;
+                        }
+                    }
+                    if (estadoEleccion == 3) {
+                        maxVotes = Math.max(vote1, vote2);
+                        maxVotes = Math.max(maxVotes, vote3);
+                        if (maxVotes == vote1) {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto1"));
+                                votoGanador = 1;
+                            }
+                            estadoEleccion = 4;
+                            maxVotes = 0;
+                        } else if (maxVotes == vote2) {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto2"));
+                                votoGanador = 2;
+                            }
+                            estadoEleccion = 4;
+                            maxVotes = 0;
+                        } else {
+                            for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto3"));
+                                votoGanador = 3;
+                            }
+                            estadoEleccion = 4;
+                            maxVotes = 0;
+                        }
+                    }
+                    if (estadoEleccion == 4) {
+                        if (votoGanador == 1) {
+                        	for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage("Te he dicho que no passaria nada...");
+                            }
+                            estadoEleccion = 0;
+                            b_election19 = false;
+                            votoGanador = 0;
+                            vote1 = 0;
+                            vote2 = 0;
+                            vote3 = 0;
+                            contador = 10;
+                        } else if (votoGanador == 2) {
+                            
+                        	//Hacer el keepInventory
+                        	
+                            estadoEleccion = 0;
+                            b_election19 = false;
+                            votoGanador = 0;
+                            vote1 = 0;
+                            vote2 = 0;
+                            vote3 = 0;
+                            contador = 10;
+                        } else {
+                        	for (Player jugador : Bukkit.getOnlinePlayers()) {
+                                jugador.sendMessage("Oh...");
+                            }
+                            estadoEleccion = 0;
+                            b_election19 = false;
+                            votoGanador = 0;
+                            vote1 = 0;
+                            vote2 = 0;
+                            vote3 = 0;
+                            contador = 10;
+                        }
+                }
 
-
-
+                }
 
 
             }

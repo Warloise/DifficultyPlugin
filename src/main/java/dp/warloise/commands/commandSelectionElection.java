@@ -29,7 +29,7 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
             return true;
         }
         if (args[0].equals("random")){
-            int randomNum = (int) (Math.random() * 17) + 1;
+            int randomNum = (int) (Math.random() * 19) + 1;
             switch (randomNum) {
                 case 1:
                     b_election1 = true;
@@ -87,12 +87,11 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
                 	b_election17 = true;
                     break;
                 case 18:
-                    if ((Bukkit.getOnlinePlayers().size()%2)==0){
-                        b_election18 = true;
-                    }else{
-                        b_election10 = true;
-                    }
+                    b_election18 = true;
                     break;
+                case 19:
+                	b_election19 = true;
+                	break;
 
             }
         }
@@ -152,11 +151,10 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
             b_election17=true;
         }
         if (args[0].equals("election18")){
-            if ((Bukkit.getOnlinePlayers().size()%2)==0){
-                b_election18 = true;
-            }else{
-                b_election10 = true;
-            }
+            b_election18 = true;
+        }
+        if (args[0].equals("election19")){
+            b_election19 = true;
         }
         return true;
     }
@@ -183,6 +181,7 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
             completions.add("election16");
             completions.add("election17");
             completions.add("election18");
+            completions.add("election19");
 
         }
         // Return a list of completions based on the user's input

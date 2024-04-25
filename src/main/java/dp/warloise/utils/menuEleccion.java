@@ -107,9 +107,12 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     static ItemStack electionItem50 = createItem(Material.PAPER, "Papel",1,null, "Gana a la piedra, recibiras: ","-> 16 de papel","+0.05 velocidad hasta morir");
     static ItemStack electionItem51 = createItem(Material.SHEARS, "Tijeras",1,null, "Gana al papel,recibiras: ","-> 1 Tijeras","-> +1 ataque base hasta morir");
 
-    static ItemStack electionItem52 = createItem(Material.EMERALD, "Casar",1,null, "Recibiras un huevo de aldeano ", "y esmeraldas", "¡para que disfrutes de tu amor!");
-    static ItemStack electionItem53 = createItem(Material.IRON_AXE, "Matar",1,null, "Recibiras un huevo de golem de hierro ","dile que mate a otro por ti","o pidele protección, depende de ti.");
-    static ItemStack electionItem54 = createItem(Material.ARROW, "Besar",1,null, "Gana al papel,recibiras: ","-> 1 Tijeras","-> +1 ataque base hasta morir");
+    static ItemStack electionItem52 = createItem(Material.CHEST, "Cofresitos",1,null, "Recibiras 8 cofres para guardar tus cositas ");
+    static ItemStack electionItem53 = createItem(Material.ENDER_CHEST, "Cofre del Fin",1,null, "Recibiras un cofre del end ","¡RECUERDA!","una vez colocado en el suelo", "solo se puede recoger con un pico","con toque de seda");
+    static ItemStack electionItem54 = createItem(Material.SHULKER_BOX, "Coraza de Merodeador",1,null, "Recibiras una caja de shulker ","El color lo elijo yo jajajajaja");
+    
+    static ItemStack electionItem55 = createItem(Material.BARRIER, "No hacer nada",1,null, "/do ¿passaria algo?", "/do 99,93% que no passaria nada");
+    static ItemStack electionItem56 = createItem(Material.CHEST, "/gamerule keepInventory true",1,Enchantment.PROTECTION_ENVIRONMENTAL, "Literalmente eso ","Weno lo explico... Al morir","mantendras tus items en el inventario");
 
 
 
@@ -601,6 +604,45 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         	DifficultyPlugin.vote3++;
             player.closeInventory();
         }
+        if (clickedItem.equals(electionItem52)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+        	if (!vote1List.contains(player)){
+                vote1List.add(player);
+            }
+        	DifficultyPlugin.vote1++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem53)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+        	if (!vote2List.contains(player)){
+                vote2List.add(player);
+            }
+        	DifficultyPlugin.vote2++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem54)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+        	if (!vote3List.contains(player)){
+                vote3List.add(player);
+            }
+        	DifficultyPlugin.vote3++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem55)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+        	DifficultyPlugin.vote1++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem56)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+        	DifficultyPlugin.vote2++;
+            player.closeInventory();
+        }
 
         event.setCancelled(true);
     }
@@ -746,6 +788,22 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         menu.setItem(2, electionItem49);
         menu.setItem(4, electionItem50);
         menu.setItem(6, electionItem51);
+        return menu;
+    }
+    public static Inventory createMenu18(){
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem52);
+        menu.setItem(4, electionItem53);
+        menu.setItem(6, electionItem54);
+        return menu;
+    }
+    public static Inventory createMenu19(){
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem55);
+        
+        menu.setItem(6, electionItem56);
         return menu;
     }
 
