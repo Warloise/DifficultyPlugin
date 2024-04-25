@@ -104,7 +104,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     static ItemStack electionItem48 = createItem(Material.DEAD_TUBE_CORAL_BLOCK, "Reroll de curación",1,null, "Se hara una eleccion de curaciones");
 
     static ItemStack electionItem49 = createItem(Material.COBBLESTONE, "Piedra",1,null, "Gana a las tijeras, recibiras: ", "-> 32 de roca normal", "-> +1 armadura hasta morir");
-    static ItemStack electionItem50 = createItem(Material.PAPER, "Papel",1,null, "Gana a la piedra, recibiras: ","-> 16 de papel","+0.05 velocidad hasta morir");
+    static ItemStack electionItem50 = createItem(Material.PAPER, "Papel",1,null, "Gana a la piedra, recibiras: ","-> 16 de papel","+0.02 velocidad hasta morir");
     static ItemStack electionItem51 = createItem(Material.SHEARS, "Tijeras",1,null, "Gana al papel,recibiras: ","-> 1 Tijeras","-> +1 ataque base hasta morir");
 
     static ItemStack electionItem52 = createItem(Material.CHEST, "Cofresitos",1,null, "Recibiras 8 cofres para guardar tus cositas ");

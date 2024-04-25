@@ -1832,7 +1832,8 @@ public class DifficultyPlugin extends JavaPlugin {
                         }
                     }
                 }
-              //Election 17 Individual
+
+                //Election 17 Individual
                 if (b_election17) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
@@ -1900,7 +1901,7 @@ public class DifficultyPlugin extends JavaPlugin {
                         	for (int i=0;i<16;i++) {
                         		votador2.getInventory().addItem(createItem(Material.PAPER,"Papel normal",1,null,"Gana a la piedra,","Weno las envuelve en amor."));
                         	}
-                        	Objects.requireNonNull(votador2.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(votador2.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue()+0.05);
+                        	Objects.requireNonNull(votador2.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(votador2.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue()+0.02);
 
                         }
                         for (Player votador3 : vote3List){
@@ -1919,7 +1920,8 @@ public class DifficultyPlugin extends JavaPlugin {
                         vote3List.clear();
                     }
                 }
-              //Election 18 Individual
+
+                //Election 18 Individual
                 if (b_election18) {
                     if (estadoEleccion == 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
@@ -2000,6 +2002,7 @@ public class DifficultyPlugin extends JavaPlugin {
                         vote3List.clear();
                     }
                 }
+
                 //Election 19 General
                 if (b_election19) {
                     if (estadoEleccion == 0) {
@@ -2069,8 +2072,9 @@ public class DifficultyPlugin extends JavaPlugin {
                             vote3 = 0;
                             contador = 10;
                         } else if (votoGanador == 2) {
-                            
-                        	//Hacer el keepInventory
+
+                            ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                            Bukkit.getServer().dispatchCommand(console,"gamerule keepInventory true");
                         	
                             estadoEleccion = 0;
                             b_election19 = false;
