@@ -3,6 +3,7 @@ package dp.warloise.utils;
 import dp.warloise.DifficultyPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
@@ -15,10 +16,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -32,6 +37,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     private static Inventory menu;
     private Inventory menu1;
     private BukkitTask task;
+    private final double jumpThreshold = 0.3; // Umbral de distancia para considerar un salto
 
     // Agregar los ítems al menú1
     ItemStack diamondSword = createItem(Material.DIAMOND_SWORD, "Espada de Diamante",1,null, "Todos los jugadores", "recibirán una espada de diamente" );
@@ -911,6 +917,27 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
 
     }
 
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (event_dangerJump){
+            Player player = event.getPlayer();
+            Location from = event.getFrom();
+            Location to = event.getTo();
 
+            // Verificar si el jugador ha saltado
+            if (to != null && to.getY() > from.getY() && to.getY() - from.getY() > jumpThreshold) {
+                // Acciones a realizar cuando un jugador salta
+                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 30, 1, true, true));
+                // Puedes realizar otras acciones aquí, como ejecutar comandos, modificar el jugador, etc.
+            }
+        }
 
     }
+
+
+
+
+
+
+
+}

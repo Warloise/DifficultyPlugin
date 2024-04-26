@@ -10,6 +10,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -61,6 +62,19 @@ public class DifficultyPlugin extends JavaPlugin {
 	public static boolean b_election19=false;
 	public static boolean b_election20=false;
 	public static boolean b_election21=false;
+
+
+	//CorruptedEvents
+	public static boolean event_highGravity = false;
+	public static int event_highGravity_time = 0;
+	public static boolean event_acidRain = false;
+	public static int event_acidRain_time = 0;
+	public static boolean event_dangerJump = false;
+	public static int event_dangerJump_time = 0;
+
+
+
+
 
 	public static int estadoEleccion=0;
 	public static int votoGanador=0;
@@ -122,6 +136,7 @@ public class DifficultyPlugin extends JavaPlugin {
 		huracanePassive();
 		timePassive();
 		election1Passive();
+		corruptedElections();
 		getServer().getPluginManager().registerEvents(new menuEleccion(this),this);
 		getServer().getPluginManager().registerEvents(new EntitySpawnListener(this), this);
 		//getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
@@ -2058,7 +2073,7 @@ public class DifficultyPlugin extends JavaPlugin {
 							// Obtener el mundo principal del servidor
 							World world = Bukkit.getWorlds().get(0);
 							// Establecer el doDaylightCycle en false
-							world.setGameRule(GameRule.KEEP_INVENTORY, true);
+							world.setGameRule(GameRule.KEEP_INVENTORY, false);
 							SendAllPlayerMessage("Se ha decidido que al morir explotes como palomita...");
 							estadoEleccion = 0;
 							b_election19 = false;
@@ -2072,7 +2087,7 @@ public class DifficultyPlugin extends JavaPlugin {
 							// Obtener el mundo principal del servidor
 							World world = Bukkit.getWorlds().get(0);
 							// Establecer el doDaylightCycle en false
-							world.setGameRule(GameRule.KEEP_INVENTORY, false);
+							world.setGameRule(GameRule.KEEP_INVENTORY, true);
 							SendAllPlayerMessage("A partir de ahora no soltaras los objetos al morir...");
 							estadoEleccion = 0;
 							b_election19 = false;
@@ -2094,7 +2109,7 @@ public class DifficultyPlugin extends JavaPlugin {
 					}
 
 				}
-				
+
 				//Election 20 General
 				if (b_election20) {
 					if (estadoEleccion == 0) {
@@ -2191,10 +2206,105 @@ public class DifficultyPlugin extends JavaPlugin {
 							// Establecer el doDaylightCycle en false
 							world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 							// Establecer la hora del día a noche
-							world.setTime(13000); // 13000 es la hora de Minecraft correspondiente a la noche
+							world.setTime(16000); // 13000 es la hora de Minecraft correspondiente a la noche
 							SendAllPlayerMessage("Ahora es de NOCHE -PERMANENTEMENTE-");
 							estadoEleccion = 0;
 							b_election20 = false;
+							votoGanador = 0;
+							vote1 = 0;
+							vote2 = 0;
+							vote3 = 0;
+							contador = 10;
+						}
+					}
+
+				}
+
+				//Election 21 General
+				if (b_election21) {
+					if (estadoEleccion == 0) {
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación General empieza en..." + contador));
+						}
+						contador--;
+						if (contador == 0) {
+							estadoEleccion = 1;
+						}
+					}
+					if (estadoEleccion == 1) {
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.openInventory(createMenu21());
+						}
+						estadoEleccion = 2;
+					}
+					if (estadoEleccion == 2) {
+						tiempoCooldown--;
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix + "La votación termina en: " + tiempoCooldown));
+						}
+						if (tiempoCooldown <= 0) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.closeInventory();
+							}
+							tiempoCooldown = 30;
+							estadoEleccion = 3;
+						}
+					}
+					if (estadoEleccion == 3) {
+						maxVotes = Math.max(vote1, vote2);
+						maxVotes = Math.max(maxVotes, vote3);
+						if (maxVotes == vote1) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto1"));
+								votoGanador = 1;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						} else if (maxVotes == vote2) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto2"));
+								votoGanador = 2;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						} else {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto3"));
+								votoGanador = 3;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						}
+					}
+					if (estadoEleccion == 4) {
+						if (votoGanador == 1) {
+							event_highGravity = true;
+							estadoEleccion = 0;
+							b_election21 = false;
+							votoGanador = 0;
+							vote1 = 0;
+							vote2 = 0;
+							vote3 = 0;
+							contador = 10;
+						} else if (votoGanador == 2) {
+							event_acidRain = true;
+							// Obtener el mundo principal del servidor
+							World world = Bukkit.getWorlds().get(0);
+							// Activar una tormenta en el mundo principal
+							world.setStorm(true);
+							world.setThundering(true); // Opcional: activar truenos junto con la tormenta
+							estadoEleccion = 0;
+							b_election21 = false;
+							votoGanador = 0;
+							vote1 = 0;
+							vote2 = 0;
+							vote3 = 0;
+							contador = 10;
+						} else {
+							event_dangerJump = true;
+
+							estadoEleccion = 0;
+							b_election21 = false;
 							votoGanador = 0;
 							vote1 = 0;
 							vote2 = 0;
@@ -2213,17 +2323,48 @@ public class DifficultyPlugin extends JavaPlugin {
 	
 	
 	
-	private void CorruptedElections(){
+	private void corruptedElections(){
 		// Ejecutar una tarea cada 20 ticks (1 segundo en el juego)
 		new BukkitRunnable() {
 			public void run() {
-				
 				//Aqui se añaden los eventos corruptos y sus respectivas consequecias
-				
-				
-				
-				
-				
+				if (event_highGravity){
+					event_highGravity_time++;
+					for (Player jugador : Bukkit.getOnlinePlayers()){
+						if (!jugador.isSneaking()){
+							jugador.sendMessage("¡¡Agachate!!");
+							jugador.setSneaking(true);
+							jugador.damage(1);
+						}
+					}
+					if (event_highGravity_time>=(60*5)){
+						event_highGravity = false;
+						event_highGravity_time = 0;
+						for (Player jugador : Bukkit.getOnlinePlayers()){
+							jugador.sendMessage("La gravedad ha vuelto a la normalidad");
+						}
+					}
+				}
+				if (event_acidRain){
+					event_acidRain_time++;
+					for (Player jugador : Bukkit.getOnlinePlayers()){
+						if (acidRainHelp(jugador)){
+							jugador.damage(1);
+							jugador.sendMessage("¡Cuidado te quemas con el acido!");
+						}
+					}
+					if (event_acidRain_time>=(60*5)){
+						event_acidRain = false;
+						event_acidRain_time = 0;
+					}
+				}
+				if(event_dangerJump){
+					event_dangerJump_time++;
+					if (event_dangerJump_time>=(60*5)){
+						event_dangerJump = false;
+						event_dangerJump_time = 0;
+					}
+				}
 			}
 		}.runTaskTimer(this, 0, 20); // 0 indica que la tarea comenzará en el próximo tick
 		// 20 indica que la tarea se repetirá cada 1 segundo
@@ -2316,6 +2457,16 @@ public class DifficultyPlugin extends JavaPlugin {
 		for (Player jugador : Bukkit.getOnlinePlayers()) {
 			jugador.sendMessage(message);
 		}
+	}
+
+	public static boolean acidRainHelp(Player jugador){
+		for (int i = 1; i <= 200; i++) {
+			Block bloqueEncima = jugador.getLocation().add(0, i, 0).getBlock();
+			if (bloqueEncima.getType() != Material.AIR) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

@@ -98,7 +98,6 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
                 case 21:
                 	b_election21 = true;
                 	break;
-
             }
         }
         if (args[0].equals("election1")){
@@ -175,28 +174,9 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             completions.add("random");
-            completions.add("election1");
-            completions.add("election2");
-            completions.add("election3");
-            completions.add("election4");
-            completions.add("election5");
-            completions.add("election6");
-            completions.add("election7");
-            completions.add("election8");
-            completions.add("election9");
-            completions.add("election10");
-            completions.add("election11");
-            completions.add("election12");
-            completions.add("election13");
-            completions.add("election14");
-            completions.add("election15");
-            completions.add("election16");
-            completions.add("election17");
-            completions.add("election18");
-            completions.add("election19");
-            completions.add("election20");
-            completions.add("election21");
-
+            for (int i=1;i<=21;i++){
+                completions.add("election"+i);
+            }
         }
         // Return a list of completions based on the user's input
         return completions;
