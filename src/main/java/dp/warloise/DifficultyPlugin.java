@@ -60,7 +60,7 @@ public class DifficultyPlugin extends JavaPlugin {
 	public static boolean b_election18=false;
 	public static boolean b_election19=false;
 	public static boolean b_election20=false;
-
+	public static boolean b_election21=false;
 
 	public static int estadoEleccion=0;
 	public static int votoGanador=0;
@@ -2210,6 +2210,30 @@ public class DifficultyPlugin extends JavaPlugin {
 		}.runTaskTimer(this,0,20); // 0 indica que la tarea comenzará en el próximo tick
 		// 20 indica que la tarea se repetirá cada 1 segundo
 	}
+	
+	
+	
+	private void CorruptedElections(){
+		// Ejecutar una tarea cada 20 ticks (1 segundo en el juego)
+		new BukkitRunnable() {
+			public void run() {
+				
+				//Aqui se añaden los eventos corruptos y sus respectivas consequecias
+				
+				
+				
+				
+				
+			}
+		}.runTaskTimer(this, 0, 20); // 0 indica que la tarea comenzará en el próximo tick
+		// 20 indica que la tarea se repetirá cada 1 segundo
+	}
+	
+	
+	
+	
+	
+	
 
 	public void onDisable(){
 		Bukkit.getConsoleSender().sendMessage(

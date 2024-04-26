@@ -95,6 +95,9 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
                 case 20:
                 	b_election20 = true;
                 	break;
+                case 21:
+                	b_election21 = true;
+                	break;
 
             }
         }
@@ -162,6 +165,9 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         if (args[0].equals("election20")){
             b_election20 = true;
         }
+        if (args[0].equals("election21")){
+            b_election21 = true;
+        }
         return true;
     }
     @Override
@@ -189,6 +195,7 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
             completions.add("election18");
             completions.add("election19");
             completions.add("election20");
+            completions.add("election21");
 
         }
         // Return a list of completions based on the user's input
