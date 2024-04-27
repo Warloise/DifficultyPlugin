@@ -25,3 +25,7 @@ commands:
     description: Activa el evento que quieras.
     usage: /selectionElection
     permission: selectionelection.config
+  corruptedEvents:
+    description: Activar o desactivar los eventos corruptos
+    usage: /corruptedEvents
+    permission: corruptedevents.config

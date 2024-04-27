@@ -29,7 +29,7 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
             return true;
         }
         if (args[0].equals("random")){
-            int randomNum = (int) (Math.random() * 20) + 1;
+            int randomNum = (int) (Math.random() * 22) + 1;
             switch (randomNum) {
                 case 1:
                     b_election1 = true;
@@ -98,6 +98,9 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
                 case 21:
                 	b_election21 = true;
                 	break;
+                case 22:
+                    b_election22 = true;
+                    break;
             }
         }
         if (args[0].equals("election1")){
@@ -167,6 +170,9 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         if (args[0].equals("election21")){
             b_election21 = true;
         }
+        if (args[0].equals("election22")){
+            b_election22 = true;
+        }
         return true;
     }
     @Override
@@ -174,7 +180,7 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             completions.add("random");
-            for (int i=1;i<=21;i++){
+            for (int i=1;i<=22;i++){
                 completions.add("election"+i);
             }
         }

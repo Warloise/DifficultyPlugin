@@ -1,11 +1,8 @@
 package dp.warloise;
 
-import dp.warloise.commands.adjustTimeCommand;
-import dp.warloise.commands.commandSelectionElection;
+import dp.warloise.commands.*;
 import dp.warloise.commands.commandSelectionElection.*;
 import dp.warloise.utils.menuEleccion;
-import dp.warloise.commands.reloadCommand;
-import dp.warloise.commands.saveCommand;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -62,6 +59,7 @@ public class DifficultyPlugin extends JavaPlugin {
 	public static boolean b_election19=false;
 	public static boolean b_election20=false;
 	public static boolean b_election21=false;
+	public static boolean b_election22=false;
 
 
 	//CorruptedEvents
@@ -71,8 +69,10 @@ public class DifficultyPlugin extends JavaPlugin {
 	public static int event_acidRain_time = 0;
 	public static boolean event_dangerJump = false;
 	public static int event_dangerJump_time = 0;
-
-
+	public static boolean event_freezeNight = false;
+	public static int event_freezeNight_time = 0;
+	public static boolean event_heatDay = false;
+	public static int event_heatDay_time = 0;
 
 
 
@@ -2315,6 +2315,97 @@ public class DifficultyPlugin extends JavaPlugin {
 
 				}
 
+				//Election 22 General
+				if (b_election22) {
+					if (estadoEleccion == 0) {
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación General empieza en..." + contador));
+						}
+						contador--;
+						if (contador == 0) {
+							estadoEleccion = 1;
+						}
+					}
+					if (estadoEleccion == 1) {
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.openInventory(createMenu22());
+						}
+						estadoEleccion = 2;
+					}
+					if (estadoEleccion == 2) {
+						tiempoCooldown--;
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix + "La votación termina en: " + tiempoCooldown));
+						}
+						if (tiempoCooldown <= 0) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.closeInventory();
+							}
+							tiempoCooldown = 30;
+							estadoEleccion = 3;
+						}
+					}
+					if (estadoEleccion == 3) {
+						maxVotes = Math.max(vote1, vote2);
+						maxVotes = Math.max(maxVotes, vote3);
+						if (maxVotes == vote1) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto1"));
+								votoGanador = 1;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						} else if (maxVotes == vote2) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto2"));
+								votoGanador = 2;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						} else {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto3"));
+								votoGanador = 3;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						}
+					}
+					if (estadoEleccion == 4) {
+						if (votoGanador == 1) {
+							SendAllPlayerMessage("Pues no pasa nada");
+							estadoEleccion = 0;
+							b_election22 = false;
+							votoGanador = 0;
+							vote1 = 0;
+							vote2 = 0;
+							vote3 = 0;
+							contador = 10;
+						} else if (votoGanador == 2) {
+							event_freezeNight = true;
+							SendAllPlayerMessage("Va a empezar a hacer frio");
+							estadoEleccion = 0;
+							b_election22 = false;
+							votoGanador = 0;
+							vote1 = 0;
+							vote2 = 0;
+							vote3 = 0;
+							contador = 10;
+						} else {
+							event_heatDay = true;
+							SendAllPlayerMessage("Mmmm te pusiste caliente...");
+							estadoEleccion = 0;
+							b_election22 = false;
+							votoGanador = 0;
+							vote1 = 0;
+							vote2 = 0;
+							vote3 = 0;
+							contador = 10;
+						}
+					}
+
+				}
+
 
 			}
 		}.runTaskTimer(this,0,20); // 0 indica que la tarea comenzará en el próximo tick
@@ -2331,38 +2422,85 @@ public class DifficultyPlugin extends JavaPlugin {
 				if (event_highGravity){
 					event_highGravity_time++;
 					for (Player jugador : Bukkit.getOnlinePlayers()){
-						if (!jugador.isSneaking()){
-							jugador.sendMessage("¡¡Agachate!!");
-							jugador.setSneaking(true);
-							jugador.damage(1);
+						if (!jugador.getGameMode().equals(GameMode.SPECTATOR)) {
+							if (!jugador.isSneaking()) {
+								jugador.sendMessage("¡¡Agachate!!");
+								jugador.setSneaking(false);
+								jugador.damage(1);
+							}
 						}
 					}
 					if (event_highGravity_time>=(60*5)){
 						event_highGravity = false;
 						event_highGravity_time = 0;
-						for (Player jugador : Bukkit.getOnlinePlayers()){
-							jugador.sendMessage("La gravedad ha vuelto a la normalidad");
-						}
+						SendAllPlayerMessage("La gravedad ha vuelto a la normalidad");
 					}
 				}
+
 				if (event_acidRain){
 					event_acidRain_time++;
 					for (Player jugador : Bukkit.getOnlinePlayers()){
 						if (acidRainHelp(jugador)){
 							jugador.damage(1);
-							jugador.sendMessage("¡Cuidado te quemas con el acido!");
+							// Calcular la posición de las partículas alrededor del jugador
+							double radius = 0.5;
+							for (double theta = 0; theta < Math.PI * 2; theta += Math.PI / 8) {
+								double x = jugador.getLocation().getX() + radius * Math.cos(theta);
+								double y = jugador.getLocation().getY() + 2; // Altura deseada de las partículas
+								double z = jugador.getLocation().getZ() + radius * Math.sin(theta);
+								jugador.getWorld().spawnParticle(Particle.SLIME, x, y, z, 1, 0, 0, 0, 0); // Agrega 0 para la velocidad en todas las direcciones
+							}
+							if (!jugador.getGameMode().equals(GameMode.SPECTATOR)){
+								jugador.sendMessage("¡Cuidado te quemas con el acido!");
+							}
 						}
 					}
 					if (event_acidRain_time>=(60*5)){
 						event_acidRain = false;
 						event_acidRain_time = 0;
+						SendAllPlayerMessage("Ya ha passado la tormenta");
 					}
 				}
+
 				if(event_dangerJump){
 					event_dangerJump_time++;
 					if (event_dangerJump_time>=(60*5)){
 						event_dangerJump = false;
 						event_dangerJump_time = 0;
+					}
+				}
+
+				if(event_freezeNight){
+					event_freezeNight_time++;
+
+					for (Player jugador : Bukkit.getOnlinePlayers()){
+						if (jugador.getLocation().getBlock().getLightLevel()<=5){
+							playerFreeze(jugador);
+							SendAllPlayerMessage("¡Busca un punto de luz para entrar en calor!");
+						}
+					}
+
+					if (event_freezeNight_time>=(60*10)){
+						event_freezeNight = false;
+						event_freezeNight_time = 0;
+						SendAllPlayerMessage("Ya ha passado el frio...");
+					}
+				}
+
+				if(event_heatDay){
+					event_heatDay_time++;
+
+					for (Player jugador : Bukkit.getOnlinePlayers()){
+						if (jugador.getLocation().getBlock().getLightLevel()>=10){
+							playerHeat(jugador);
+							SendAllPlayerMessage("¡Alejate de la luz que hace mucho calor!");
+						}
+					}
+
+					if (event_heatDay_time>=(60*10)){
+						event_heatDay = false;
+						event_heatDay_time = 0;
+						SendAllPlayerMessage("Ya no hace tanto calor...");
 					}
 				}
 			}
@@ -2427,6 +2565,7 @@ public class DifficultyPlugin extends JavaPlugin {
 		this.getCommand("difficulty-save").setExecutor(new saveCommand(this));
 		this.getCommand("menueleccion").setExecutor(new menuEleccion(this));
 		this.getCommand("selectionElection").setExecutor(new commandSelectionElection(this));
+		this.getCommand("corruptedEvents").setExecutor(new corruptedEventCommand(this));
 
 	}
 
@@ -2468,6 +2607,16 @@ public class DifficultyPlugin extends JavaPlugin {
 		}
 		return true;
 	}
+
+	public static void playerFreeze(Player jugador){
+		jugador.setFreezeTicks(jugador.getMaxFreezeTicks()+100);
+	}
+
+	public static void playerHeat(Player jugador){
+		jugador.setFireTicks(100);
+		//jugador.setVisualFire(true);
+	}
+
 
 }
 

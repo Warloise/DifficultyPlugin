@@ -128,6 +128,11 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     static ItemStack electionItem61 = createItem(Material.SLIME_BLOCK, "Acid Rain",1,null, "¡Cuidado!", "¡Durante 5 minutos la lluvia que caiga","te hara daño poco a poco...!");
     static ItemStack electionItem62 = createItem(Material.RABBIT_FOOT, "Salto elevado peligroso",1,null, "¡Cuidado!", "¡Durante 5 minutos saltaras mas...!","PERO EL DAÑO DE CAIDA NO SERA MITIGADO...");
 
+    static ItemStack electionItem63 = createItem(Material.BARRIER, "No hacer nada",1,null, "/do ¿passaria algo?", "/do 99,93% que no passaria nada");
+    static ItemStack electionItem64 = createItem(Material.ICE, "Fria noche",1,null, "Si estas en un nivel de luz", "INFERIOR a 5 te empezaras a congelar");
+    static ItemStack electionItem65 = createItem(Material.MAGMA_BLOCK, "Dia caluroso",1,null, "Si estas en un nivel de luz", "SUPERIOR a 10 te empezaras a quemar");
+
+
 
     public menuEleccion(DifficultyPlugin plugin) {
         this.plugin = plugin;
@@ -691,6 +696,24 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         	DifficultyPlugin.vote3++;
             player.closeInventory();
         }
+        if (clickedItem.equals(electionItem63)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+            DifficultyPlugin.vote1++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem64)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+            DifficultyPlugin.vote2++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem65)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+            DifficultyPlugin.vote3++;
+            player.closeInventory();
+        }
 
         event.setCancelled(true);
     }
@@ -868,6 +891,14 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         menu.setItem(2, electionItem60);
         menu.setItem(4, electionItem61);
         menu.setItem(6, electionItem62);
+        return menu;
+    }
+    public static Inventory createMenu22(){
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem63);
+        menu.setItem(4, electionItem64);
+        menu.setItem(6, electionItem65);
         return menu;
     }
 
