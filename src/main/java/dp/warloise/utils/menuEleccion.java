@@ -16,8 +16,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -132,6 +133,15 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     static ItemStack electionItem64 = createItem(Material.ICE, "Fria noche",1,null, "Si estas en un nivel de luz", "INFERIOR a 5 te empezaras a congelar");
     static ItemStack electionItem65 = createItem(Material.MAGMA_BLOCK, "Dia caluroso",1,null, "Si estas en un nivel de luz", "SUPERIOR a 10 te empezaras a quemar");
 
+    static ItemStack electionItem66 = createItem(Material.CRAFTING_TABLE, "Mezcladora de inventarios",1,null, "Se mezclaran los items de tu inventario", "cada 10 segundos durante 1 minutos...");
+    static ItemStack electionItem67 = createItem(Material.SUGAR, "Robo de inventarios",1,null, "Durante 30 segundos", "Podras robar los inventarios de los jugadores", "cada segundo se abrira el inventario de un jugador al azar","roba todo lo que puedas","TEN CUIDADO QUE NO TE PODRAS MOVER","DURANTE ESE TIEMPO");
+    static ItemStack electionItem68 = createItem(Material.SCULK, "Evento corrupto al azar",1,null, "Agarrate los pantalones", "puede pasar cualquier cosa...");
+
+    static ItemStack electionItem69 = createItem(Material.NOTE_BLOCK, "Esquizofrenia",1,null, "Durante 2 minutos", "pueden aparecer sonidos de mobs...","o MOBS...");
+    static ItemStack electionItem70 = createItem(Material.BLACKSTONE, "Claustrofobia",1,null, "Obtendras oscuridad", "y te ahogaras poco a poco...");
+    static ItemStack electionItem71 = createItem(Material.FEATHER, "Acrofobia",1,null, "Empezaras a flotar con levitación...", "La caida puede ser mortal...");
+
+
 
 
     public menuEleccion(DifficultyPlugin plugin) {
@@ -178,6 +188,26 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
             //task.cancel();
         //}
         if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
+
+
+        if(event_roboInventarios){
+            Player jugador = (Player) event.getWhoClicked();
+            Inventory inventario = event.getInventory();
+
+            // Verificar si el jugador tiene permiso para dropear ítems (puedes ajustar esto según tu sistema de permisos)
+            if (!jugador.hasPermission("permisos.para.dropear")) {
+                // Cancelar el evento si el jugador intenta mover un ítem fuera de su inventario
+                if (event.getRawSlot() != event.getView().convertSlot(event.getRawSlot())) {
+                    event.setCancelled(true);
+                    jugador.sendMessage("¡No puedes dropear ítems desde tu inventario!");
+                }
+            }
+        }
+
+
+
+
+
 
 
         //Election 1 V
@@ -714,6 +744,51 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
             DifficultyPlugin.vote3++;
             player.closeInventory();
         }
+        if (clickedItem.equals(electionItem66)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+            DifficultyPlugin.vote1++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem67)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+            DifficultyPlugin.vote2++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem68)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+            DifficultyPlugin.vote3++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem69)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+            if (!vote1List.contains(player)){
+                vote1List.add(player);
+            }
+            DifficultyPlugin.vote1++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem70)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+            if (!vote2List.contains(player)){
+                vote2List.add(player);
+            }
+            DifficultyPlugin.vote2++;
+            player.closeInventory();
+        }
+        if (clickedItem.equals(electionItem71)) {
+            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+            if (!vote3List.contains(player)){
+                vote3List.add(player);
+            }
+            DifficultyPlugin.vote3++;
+            player.closeInventory();
+        }
 
         event.setCancelled(true);
     }
@@ -724,6 +799,10 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         menu.setItem(2, diamondSword);
         menu.setItem(4, goldenApple);
         menu.setItem(6, diamondPickaxe);
+    }
+    public static Inventory createMenuSimonDice(String nombreJugador) {
+        menu = Bukkit.createInventory(null, 27, "Roba roba a "+nombreJugador);
+        return menu;
     }
     public static Inventory createMenu1(){
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
@@ -901,6 +980,22 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         menu.setItem(6, electionItem65);
         return menu;
     }
+    public static Inventory createMenu23(){
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem66);
+        menu.setItem(4, electionItem67);
+        menu.setItem(6, electionItem68);
+        return menu;
+    }
+    public static Inventory createMenu24(){
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem69);
+        menu.setItem(4, electionItem70);
+        menu.setItem(6, electionItem71);
+        return menu;
+    }
 
     public static ItemStack createItem(Material material, String name,int level, Enchantment enchant, String... loreText) {
         ItemStack item = new ItemStack(material);
@@ -962,13 +1057,30 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
                 // Puedes realizar otras acciones aquí, como ejecutar comandos, modificar el jugador, etc.
             }
         }
-
     }
 
-
-
-
-
-
-
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        if (event_roboInventarios){
+            if (event.getPlayer() instanceof Player) {
+                Player jugador = (Player) event.getPlayer();
+                Inventory inventario = Robado.getInventory();
+                if(jugador.equals(Robado)){
+                    for(Player player : Bukkit.getOnlinePlayers()){
+                        if (!player.equals(Robado)){
+                            player.openInventory(inventario);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public void onPlayerDropItem(PlayerDropItemEvent event){
+        Player jugador = event.getPlayer();
+        // Verificar si el jugador tiene permiso para dropear ítems (puedes ajustar esto según tu sistema de permisos)
+        if (event_roboInventarios) {
+            event.setCancelled(true);
+            jugador.sendMessage("¡No puedes dropear ítems!");
+        }
+    }
 }

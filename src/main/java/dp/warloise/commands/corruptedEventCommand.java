@@ -2,7 +2,6 @@ package dp.warloise.commands;
 
 
 import dp.warloise.DifficultyPlugin;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -41,10 +40,10 @@ public class corruptedEventCommand implements CommandExecutor, TabCompleter {
         if (args[0].equals("acidRain")){
             if (event_acidRain){
                 event_acidRain = false;
-                SendAllPlayerMessage("Empieza a caer lluvia ácida");
+                SendAllPlayerMessage("Ya no hay contaminación");
             }else{
                 event_acidRain = true;
-                SendAllPlayerMessage("Ya no hay contaminación");
+                SendAllPlayerMessage("Empieza a caer lluvia ácida");
             }
         }
         if (args[0].equals("dangerJump")){
@@ -74,6 +73,24 @@ public class corruptedEventCommand implements CommandExecutor, TabCompleter {
                 SendAllPlayerMessage("La temperatura ha aumentado bastante, si hace calor sudas y hueles mal...");
             }
         }
+        if (args[0].equals("MixingInventory")){
+            if (event_MixingInventory){
+                event_MixingInventory = false;
+                SendAllPlayerMessage("Ya paro ya paro que no tiene gracia...");
+            }else{
+                event_MixingInventory = true;
+                SendAllPlayerMessage("Cuidado se viene mezcladora");
+            }
+        }
+        if (args[0].equals("simonDice")){
+            if (event_roboInventarios){
+                event_roboInventarios = false;
+                SendAllPlayerMessage("Se te paso la peda...");
+            }else{
+                event_roboInventarios = true;
+                SendAllPlayerMessage("Cuidado marioneta... Simon dice...");
+            }
+        }
 
         return true;
 
@@ -86,6 +103,9 @@ public class corruptedEventCommand implements CommandExecutor, TabCompleter {
         completions.add("dangerJump");
         completions.add("freezeNight");
         completions.add("heatDay");
+        completions.add("MixingInventory");
+        completions.add("simonDice");
+
         // Return a list of completions based on the user's input
         return completions;
     }

@@ -1,20 +1,16 @@
 package dp.warloise;
 
 import dp.warloise.commands.*;
-import dp.warloise.commands.commandSelectionElection.*;
 import dp.warloise.utils.menuEleccion;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.type.Stairs;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -27,10 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Vector;
+import java.util.*;
 
 import static dp.warloise.utils.menuEleccion.*;
 
@@ -60,6 +53,8 @@ public class DifficultyPlugin extends JavaPlugin {
 	public static boolean b_election20=false;
 	public static boolean b_election21=false;
 	public static boolean b_election22=false;
+	public static boolean b_election23=false;
+	public static boolean b_election24=false;
 
 
 	//CorruptedEvents
@@ -73,7 +68,39 @@ public class DifficultyPlugin extends JavaPlugin {
 	public static int event_freezeNight_time = 0;
 	public static boolean event_heatDay = false;
 	public static int event_heatDay_time = 0;
-
+	public static boolean event_MixingInventory = false;
+	public static int event_MixingInventory_time = 0;
+	public static boolean event_roboInventarios = false;
+	public static int event_roboInventarios_time = 0;
+	public static Player Robado = null;
+	public static boolean event_esquizofrenia = false;
+	public static int event_esquizofrenia_time = 0;
+	public static boolean event_claustrofobia = false;
+	public static int event_claustrofobia_time = 0;
+	public static boolean event_acrofobia = false;
+	public static int event_acrofobia_time = 0;
+	public static Vector<Player> esquizoList = new Vector<>();
+	public static Vector<Player> claustroList = new Vector<>();
+	public static Vector<Player> acroList = new Vector<>();
+	private Sound[] sonidos = {
+			Sound.ENTITY_EXPERIENCE_ORB_PICKUP,
+			Sound.ENTITY_FIREWORK_ROCKET_BLAST,
+			Sound.ENTITY_PLAYER_LEVELUP,
+			Sound.ENTITY_CAT_PURR,
+			Sound.ENTITY_ZOMBIE_AMBIENT,
+			Sound.ENTITY_SKELETON_AMBIENT,
+			Sound.ENTITY_CREEPER_PRIMED,
+			Sound.ENTITY_ENDERMAN_AMBIENT,
+			Sound.ENTITY_BLAZE_AMBIENT,
+			Sound.ENTITY_WARDEN_AGITATED,
+			Sound.ENTITY_SPIDER_AMBIENT,
+			Sound.ENTITY_PARROT_IMITATE_ENDER_DRAGON,
+			Sound.ENTITY_TNT_PRIMED,
+			Sound.ENTITY_GENERIC_EXPLODE,
+			Sound.ENTITY_WITHER_SPAWN,
+			Sound.ENTITY_WITCH_CELEBRATE
+			// Agrega más sonidos aquí si quieres mi rey
+	};
 
 
 	public static int estadoEleccion=0;
@@ -2406,6 +2433,204 @@ public class DifficultyPlugin extends JavaPlugin {
 
 				}
 
+				//Election 23 General
+				if (b_election23) {
+					if (estadoEleccion == 0) {
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación General empieza en..." + contador));
+						}
+						contador--;
+						if (contador == 0) {
+							estadoEleccion = 1;
+						}
+					}
+					if (estadoEleccion == 1) {
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.openInventory(createMenu23());
+						}
+						estadoEleccion = 2;
+					}
+					if (estadoEleccion == 2) {
+						tiempoCooldown--;
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix + "La votación termina en: " + tiempoCooldown));
+						}
+						if (tiempoCooldown <= 0) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.closeInventory();
+							}
+							tiempoCooldown = 30;
+							estadoEleccion = 3;
+						}
+					}
+					if (estadoEleccion == 3) {
+						maxVotes = Math.max(vote1, vote2);
+						maxVotes = Math.max(maxVotes, vote3);
+						if (maxVotes == vote1) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto1"));
+								votoGanador = 1;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						} else if (maxVotes == vote2) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto2"));
+								votoGanador = 2;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						} else {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto3"));
+								votoGanador = 3;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						}
+					}
+					if (estadoEleccion == 4) {
+						if (votoGanador == 1) {
+							SendAllPlayerMessage("¡¡¡Iniciamos el mixing!!!");
+							event_MixingInventory = true;
+							estadoEleccion = 0;
+							b_election23 = false;
+							votoGanador = 0;
+							vote1 = 0;
+							vote2 = 0;
+							vote3 = 0;
+							contador = 10;
+						} else if (votoGanador == 2) {
+							SendAllPlayerMessage("Cuidado que te mareas...");
+							event_roboInventarios = true;
+							estadoEleccion = 0;
+							b_election23 = false;
+							votoGanador = 0;
+							vote1 = 0;
+							vote2 = 0;
+							vote3 = 0;
+							contador = 10;
+						} else {
+
+							SendAllPlayerMessage("Error del sistema...");
+							int randomNum = (int) (Math.random() * 7) + 1;
+							switch (randomNum) {
+								case 1:
+									event_heatDay = true;
+									break;
+								case 2:
+									event_freezeNight = true;
+									break;
+								case 3:
+									event_roboInventarios = true;
+									break;
+								case 4:
+									event_acidRain = true;
+									break;
+								case 5:
+									event_dangerJump = true;
+									break;
+								case 6:
+									event_highGravity = true;
+									break;
+								case 7:
+									event_MixingInventory = true;
+									break;
+							}
+							estadoEleccion = 0;
+							b_election23 = false;
+							votoGanador = 0;
+							vote1 = 0;
+							vote2 = 0;
+							vote3 = 0;
+							contador = 10;
+						}
+					}
+
+				}
+
+				//Election 24 Individual
+				if (b_election24) {
+					if (estadoEleccion == 0) {
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"La votación Individual empieza en..." + contador));
+						}
+						contador--;
+						if (contador == 0) {
+							estadoEleccion = 1;
+						}
+					}
+					if (estadoEleccion == 1) {
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.openInventory(createMenu24());
+						}
+						estadoEleccion = 2;
+					}
+					if (estadoEleccion == 2) {
+						tiempoCooldown--;
+						for (Player jugador : Bukkit.getOnlinePlayers()) {
+							jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix + "La votación termina en: " + tiempoCooldown));
+						}
+						if (tiempoCooldown <= 0) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.closeInventory();
+							}
+							tiempoCooldown = 30;
+							estadoEleccion = 3;
+						}
+					}
+					if (estadoEleccion == 3) {
+						maxVotes = Math.max(vote1, vote2);
+						maxVotes = Math.max(maxVotes, vote3);
+						if (maxVotes == vote1) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto1"));
+								votoGanador = 1;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						} else if (maxVotes == vote2) {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto2"));
+								votoGanador = 2;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						} else {
+							for (Player jugador : Bukkit.getOnlinePlayers()) {
+								jugador.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix+"Ha ganado el voto3"));
+								votoGanador = 3;
+							}
+							estadoEleccion = 4;
+							maxVotes = 0;
+						}
+					}
+					if (estadoEleccion == 4) {
+						for (Player votador1 : vote1List){
+							esquizoList.add(votador1);
+							event_esquizofrenia = true;
+						}
+						for (Player votador2 : vote2List){
+							claustroList.add(votador2);
+							event_claustrofobia = true;
+						}
+						for (Player votador3 : vote3List){
+							acroList.add(votador3);
+							event_acrofobia = true;
+						}
+						estadoEleccion = 0;
+						b_election24 = false;
+						votoGanador = 0;
+						vote1 = 0;
+						vote2 = 0;
+						vote3 = 0;
+						contador = 10;
+						vote1List.clear();
+						vote2List.clear();
+						vote3List.clear();
+					}
+				}
+
 
 			}
 		}.runTaskTimer(this,0,20); // 0 indica que la tarea comenzará en el próximo tick
@@ -2503,6 +2728,63 @@ public class DifficultyPlugin extends JavaPlugin {
 						SendAllPlayerMessage("Ya no hace tanto calor...");
 					}
 				}
+
+				if(event_MixingInventory){
+					event_MixingInventory_time++;
+					if ((event_MixingInventory_time%10)==0){
+						for (Player jugador : Bukkit.getOnlinePlayers()){
+							mezclarInventario(jugador);
+						}
+					}
+					if (event_MixingInventory_time>=(60)){
+						event_MixingInventory = false;
+						event_MixingInventory_time = 0;
+						SendAllPlayerMessage("Ya paro, ya paro que no hace gracia...");
+					}
+				}
+
+				if(event_roboInventarios){
+					event_roboInventarios_time++;
+					//Aleatorio de player
+					List<Player> jugadoresEnLinea = (List<Player>) Bukkit.getServer().getOnlinePlayers();
+					// Generar un número aleatorio entre 0 y el número de jugadores en línea - 1
+					Random rand = new Random();
+					int indiceAleatorio = rand.nextInt(jugadoresEnLinea.size());
+					// Obtener el jugador en el índice aleatorio
+					Player jugadorSeleccionado = jugadoresEnLinea.get(indiceAleatorio);
+					Robado = jugadorSeleccionado;
+					SendAllPlayerMessage("Ahora manda: "+ Robado.getName());
+					Robado.openInventory(createMenuSimonDice(Robado.getName()));
+
+					if (event_roboInventarios_time >=(30)){
+						event_roboInventarios = false;
+						event_roboInventarios_time = 0;
+						Robado = null;
+						for(Player jugador : Bukkit.getOnlinePlayers()){
+							jugador.closeInventory();
+						}
+						SendAllPlayerMessage("Ya paro, ya paro que no hace gracia...");
+					}
+				}
+
+				if (event_esquizofrenia){
+					event_esquizofrenia_time++;
+					if ((event_esquizofrenia_time%10)==0){
+						for (Player esquizofrenico : esquizoList){
+							reproducirSonidoAleatorio(esquizofrenico);
+						}
+					}
+					if(event_esquizofrenia_time>=(60*2)){
+						event_esquizofrenia = false;
+						event_esquizofrenia_time = 0;
+					}
+				}
+
+				if (event_claustrofobia){
+					event_claustrofobia_time++;
+
+				}
+
 			}
 		}.runTaskTimer(this, 0, 20); // 0 indica que la tarea comenzará en el próximo tick
 		// 20 indica que la tarea se repetirá cada 1 segundo
@@ -2615,6 +2897,34 @@ public class DifficultyPlugin extends JavaPlugin {
 	public static void playerHeat(Player jugador){
 		jugador.setFireTicks(100);
 		//jugador.setVisualFire(true);
+	}
+
+	public static void mezclarInventario(Player jugador){
+		Inventory inventario = jugador.getInventory();
+		ItemStack[] contenidoInventario = inventario.getContents();
+		List<ItemStack> elementos = new ArrayList<>();
+		// Agregar elementos no nulos al ArrayList
+		for (ItemStack item : contenidoInventario) {
+			if (item != null) {
+				elementos.add(item);
+			}
+		}
+		// Mezclar los elementos
+		Collections.shuffle(elementos);
+		// Limpiar el inventario
+		inventario.clear();
+		// Colocar los elementos mezclados en el inventario
+		for (int i = 0; i < elementos.size(); i++) {
+			inventario.setItem(i, elementos.get(i));
+		}
+	}
+	public void reproducirSonidoAleatorio(Player jugador) {
+		Random rand = new Random();
+		int indiceSonido = rand.nextInt(sonidos.length);
+		Sound sonidoAleatorio = sonidos[indiceSonido];
+
+		// Reproducir el sonido para el jugador
+		jugador.playSound(jugador.getLocation(), sonidoAleatorio, 1.0f, 1.0f);
 	}
 
 
