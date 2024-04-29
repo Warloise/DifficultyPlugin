@@ -139,7 +139,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
 
     static ItemStack electionItem69 = createItem(Material.NOTE_BLOCK, "Esquizofrenia",1,null, "Durante 2 minutos", "pueden aparecer sonidos de mobs...","o MOBS...");
     static ItemStack electionItem70 = createItem(Material.BLACKSTONE, "Claustrofobia",1,null, "Obtendras oscuridad", "y te ahogaras poco a poco...");
-    static ItemStack electionItem71 = createItem(Material.FEATHER, "Acrofobia",1,null, "Empezaras a flotar con levitación...", "La caida puede ser mortal...");
+    static ItemStack electionItem71 = createItem(Material.FEATHER, "Acrofobia",1,null, "Empezaras a flotar con levitación...", "La caida puede ser mortal...","Recibiras un cubo de agua tranquilo/a...");
 
 
 

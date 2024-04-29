@@ -2617,6 +2617,7 @@ public class DifficultyPlugin extends JavaPlugin {
 						for (Player votador3 : vote3List){
 							acroList.add(votador3);
 							event_acrofobia = true;
+							votador3.getInventory().addItem(createItem(Material.WATER_BUCKET,"Pa que no te caigas",1,null,"¡¡No te conviertas en tortilla!!"));
 						}
 						estadoEleccion = 0;
 						b_election24 = false;
@@ -2782,9 +2783,32 @@ public class DifficultyPlugin extends JavaPlugin {
 
 				if (event_claustrofobia){
 					event_claustrofobia_time++;
-
+					for (Player claustrofobico : claustroList){
+						claustrofobico.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 20, 1, true, false));
+						if (claustrofobico.getRemainingAir()<=2) {
+							claustrofobico.setRemainingAir(claustrofobico.getRemainingAir());
+						}else{
+							claustrofobico.setRemainingAir(claustrofobico.getRemainingAir() - 1);
+						}
+					}
+					if(event_claustrofobia_time>=(60*2)){
+						event_claustrofobia = false;
+						event_claustrofobia_time = 0;
+					}
 				}
-
+				
+				if (event_acrofobia) {
+					event_acrofobia_time++;
+					if ((event_acrofobia_time%10)==0){
+						for (Player acrofobico : acroList) {
+							acrofobico.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 160, 1, true, false));
+						}
+					}
+					if(event_acrofobia_time>=(60*2)){
+						event_acrofobia = false;
+						event_acrofobia_time = 0;
+					}
+				}
 			}
 		}.runTaskTimer(this, 0, 20); // 0 indica que la tarea comenzará en el próximo tick
 		// 20 indica que la tarea se repetirá cada 1 segundo
