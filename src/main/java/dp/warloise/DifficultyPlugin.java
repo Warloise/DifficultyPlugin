@@ -2784,11 +2784,11 @@ public class DifficultyPlugin extends JavaPlugin {
 				if (event_claustrofobia){
 					event_claustrofobia_time++;
 					for (Player claustrofobico : claustroList){
-						claustrofobico.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 20, 1, true, false));
-						if (claustrofobico.getRemainingAir()<=2) {
+						claustrofobico.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 40, 1, true, false));
+						if (claustrofobico.getRemainingAir()<=40) {
 							claustrofobico.setRemainingAir(claustrofobico.getRemainingAir());
 						}else{
-							claustrofobico.setRemainingAir(claustrofobico.getRemainingAir() - 1);
+							claustrofobico.setRemainingAir(claustrofobico.getRemainingAir() - 100);
 						}
 					}
 					if(event_claustrofobia_time>=(60*2)){
