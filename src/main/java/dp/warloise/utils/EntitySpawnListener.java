@@ -37,6 +37,13 @@ public class EntitySpawnListener implements Listener {
      */
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent event) {
+
+        //Codigo de elecciones
+
+
+
+
+
         //Guardmos la entidad que ha generado el evento
         Entity entity = event.getEntity();
         //Si la entidad es un objeto Enemy...

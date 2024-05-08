@@ -107,7 +107,9 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
                 case 24:
                     b_election24 = true;
                     break;
-
+                case 25:
+                    b_election25 = true;
+                    break;
             }
         }
         if (args[0].equals("election1")){
@@ -185,6 +187,9 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         }
         if (args[0].equals("election24")){
             b_election24 = true;
+        }
+        if (args[0].equals("election25")){
+            b_election25 = true;
         }
         return true;
     }

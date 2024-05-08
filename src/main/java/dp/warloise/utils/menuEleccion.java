@@ -204,12 +204,6 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
             }
         }
 
-
-
-
-
-
-
         //Election 1 V
         if (clickedItem.equals(electionItem1)) {
             //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
