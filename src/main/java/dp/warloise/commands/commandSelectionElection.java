@@ -1,6 +1,7 @@
 package dp.warloise.commands;
 
 import dp.warloise.DifficultyPlugin;
+import dp.warloise.utils.Eleccion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dp.warloise.DifficultyPlugin.*;
+import static dp.warloise.utils.menuEleccion.*;
 
 public class commandSelectionElection implements CommandExecutor, TabCompleter {
 
@@ -32,164 +34,158 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
             int randomNum = (int) (Math.random() * 24) + 1;
             switch (randomNum) {
                 case 1:
-                    b_election1 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu1());
                     break;
                 case 2:
-                    b_election2 = true;
+                    objetoEleccion.StartElectionMainGeneral(createMenu2());
                     break;
                 case 3:
-                    b_election3 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu3());
                     break;
                 case 4:
-                    b_election4 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu4());
                     break;
                 case 5:
-                    b_election5 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu5());
                     break;
                 case 6:
-                    b_election6 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu6());
                     break;
                 case 7:
-                    b_election7 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu7());
                     break;
                 case 8:
-                    b_election8 = true;
+                    objetoEleccion.StartElectionMainGeneral(createMenu8());
                     break;
                 case 9:
-                    b_election9 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu9());
                     break;
                 case 10:
-                    b_election10 = true;
+                    objetoEleccion.StartElectionMainGeneral(createMenu10());
                     break;
                 case 11:
                     if (Bukkit.getOnlinePlayers().size()>=2){
-                        b_election11 = true;
+                        objetoEleccion.StartElectionMainGeneral(createMenu11());
                     }else{
-                        b_election10 = true;
+                        objetoEleccion.StartElectionMainGeneral(createMenu10());
                     }
                     break;
                 case 12:
-                    b_election12 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu12());
                     break;
                 case 13:
-                    b_election13 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu13());
                     break;
                 case 14:
-                    b_election14 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu14());
                     break;
                 case 15:
-                    b_election15 = true;
+                    objetoEleccion.StartElectionMainGeneral(createMenu15());
                     break;
                 case 16:
-                    b_election16 = true;
+                    objetoEleccion.StartElectionMainGeneral(createMenu16());
                     break;
                 case 17:
-                	b_election17 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu17());
                     break;
                 case 18:
-                    b_election18 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu18());
                     break;
                 case 19:
-                	b_election19 = true;
+                    objetoEleccion.StartElectionMainGeneral(createMenu19());
                 	break;
                 case 20:
-                	b_election20 = true;
+                    objetoEleccion.StartElectionMainGeneral(createMenu20());
                 	break;
                 case 21:
-                	b_election21 = true;
+                    objetoEleccion.StartElectionMainGeneral(createMenu21());
                 	break;
                 case 22:
-                    b_election22 = true;
+                    objetoEleccion.StartElectionMainGeneral(createMenu22());
                     break;
                 case 23:
-                    b_election23 = true;
+                    objetoEleccion.StartElectionMainGeneral(createMenu23());
                     break;
                 case 24:
-                    b_election24 = true;
-                    break;
-                case 25:
-                    b_election25 = true;
+                    objetoEleccion.StartElectionMainIndividual(createMenu24());
                     break;
             }
         }
         if (args[0].equals("election1")){
-            b_election1=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu1());
         }
         if (args[0].equals("election2")){
-            b_election2=true;
+            objetoEleccion.StartElectionMainGeneral(createMenu2());
         }
         if (args[0].equals("election3")){
-            b_election3=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu3());
         }
         if (args[0].equals("election4")){
-            b_election4=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu4());
         }
         if (args[0].equals("election5")){
-            b_election5=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu5());
         }
         if (args[0].equals("election6")){
-            b_election6=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu6());
         }
         if (args[0].equals("election7")){
-            b_election7=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu7());
         }
         if (args[0].equals("election8")){
-            b_election8=true;
+            objetoEleccion.StartElectionMainGeneral(createMenu8());
         }
         if (args[0].equals("election9")){
-            b_election9=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu9());
         }
         if (args[0].equals("election10")){
-            b_election10=true;
+            objetoEleccion.StartElectionMainGeneral(createMenu10());
         }
         if (args[0].equals("election11")){
             if (Bukkit.getOnlinePlayers().size()>=2){
-                b_election11 = true;
+                objetoEleccion.StartElectionMainGeneral(createMenu11());
             }else{
-                b_election10 = true;
+                objetoEleccion.StartElectionMainGeneral(createMenu10());
             }
         }
         if (args[0].equals("election12")){
-            b_election12=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu12());
         }
         if (args[0].equals("election13")){
-            b_election13=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu13());
         }
         if (args[0].equals("election14")){
-            b_election14=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu14());
         }
         if (args[0].equals("election15")){
-            b_election15=true;
+            objetoEleccion.StartElectionMainGeneral(createMenu15());
         }
         if (args[0].equals("election16")){
-            b_election16=true;
+            objetoEleccion.StartElectionMainGeneral(createMenu16());
         }
         if (args[0].equals("election17")){
-            b_election17=true;
+            objetoEleccion.StartElectionMainIndividual(createMenu17());
         }
         if (args[0].equals("election18")){
-            b_election18 = true;
+            objetoEleccion.StartElectionMainIndividual(createMenu18());
         }
         if (args[0].equals("election19")){
-            b_election19 = true;
+            objetoEleccion.StartElectionMainGeneral(createMenu19());
         }
         if (args[0].equals("election20")){
-            b_election20 = true;
+            objetoEleccion.StartElectionMainGeneral(createMenu20());
         }
         if (args[0].equals("election21")){
-            b_election21 = true;
+            objetoEleccion.StartElectionMainGeneral(createMenu21());
         }
         if (args[0].equals("election22")){
-            b_election22 = true;
+            objetoEleccion.StartElectionMainGeneral(createMenu22());
         }
         if (args[0].equals("election23")){
-            b_election23 = true;
+            objetoEleccion.StartElectionMainGeneral(createMenu23());
         }
         if (args[0].equals("election24")){
-            b_election24 = true;
-        }
-        if (args[0].equals("election25")){
-            b_election25 = true;
+            objetoEleccion.StartElectionMainIndividual(createMenu24());
         }
         return true;
     }

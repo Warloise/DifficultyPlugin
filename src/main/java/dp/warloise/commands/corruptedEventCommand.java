@@ -29,71 +29,76 @@ public class corruptedEventCommand implements CommandExecutor, TabCompleter {
         }
         // Activar cada evento
         if (args[0].equals("highGravity")){
-            if (event_highGravity){
-                event_highGravity = false;
+            if (objetoEleccion.isEvent_highGravity()){
+                objetoEleccion.setEvent_highGravity(false);
                 SendAllPlayerMessage("La gravedad vuelve a la normalidad");
             }else{
-                event_highGravity = true;
+                objetoEleccion.highGravityPassive();
                 SendAllPlayerMessage("La gravedad ha aumentado");
             }
         }
         if (args[0].equals("acidRain")){
-            if (event_acidRain){
-                event_acidRain = false;
+            if (objetoEleccion.event_acidRain){
+                objetoEleccion.setEvent_acidRain(false);
                 SendAllPlayerMessage("Ya no hay contaminación");
             }else{
-                event_acidRain = true;
+                objetoEleccion.acidRainPassive();
+                objetoEleccion.setEvent_acidRain(true);
                 SendAllPlayerMessage("Empieza a caer lluvia ácida");
             }
         }
         if (args[0].equals("dangerJump")){
-            if (event_dangerJump){
-                event_dangerJump = false;
+            if (objetoEleccion.event_dangerJump){
+                objetoEleccion.setEvent_dangerJump(false);
                 SendAllPlayerMessage("Ya no flotarás mas tranquilo/a");
             }else{
-                event_dangerJump = true;
+                objetoEleccion.dangerJumpPassive();
+                objetoEleccion.setEvent_dangerJump(true);
                 SendAllPlayerMessage("Si saltas flotarás, CUIDADO");
             }
         }
         if (args[0].equals("freezeNight")){
-            if (event_freezeNight){
-                event_freezeNight = false;
+            if (objetoEleccion.isEvent_freezeNight()){
+                objetoEleccion.setEvent_freezeNight(false);
                 SendAllPlayerMessage("La temperatura ha vuelto a la normalidad");
             }else{
-                event_freezeNight = true;
+                objetoEleccion.setEvent_freezeNight(true);
+                objetoEleccion.freezeNightPassive();
                 SendAllPlayerMessage("Busca un punto de luz, en la noche empezara a hacer frio...");
             }
         }
         if (args[0].equals("heatDay")){
-            if (event_heatDay){
-                event_heatDay = false;
+            if (objetoEleccion.isEvent_heatDay()){
+                objetoEleccion.setEvent_heatDay(false);
                 SendAllPlayerMessage("La temperatura ha vuelto a la normalidad");
             }else{
-                event_heatDay = true;
+                objetoEleccion.setEvent_heatDay(true);
+                objetoEleccion.heatDayPassive();
                 SendAllPlayerMessage("La temperatura ha aumentado bastante, si hace calor sudas y hueles mal...");
             }
         }
-        if (args[0].equals("MixingInventory")){
-            if (event_MixingInventory){
-                event_MixingInventory = false;
-                SendAllPlayerMessage("Ya paro ya paro que no tiene gracia...");
-            }else{
-                event_MixingInventory = true;
-                SendAllPlayerMessage("Cuidado se viene mezcladora");
+        if (args[0].equals("esquizofrenia")) {
+            if (objetoEleccion.event_esquizofrenia) {
+                objetoEleccion.event_esquizofrenia = false;
+                objetoEleccion.esquizoList.clear();
+                sender.sendMessage("La gente ya no tiene esquizofrenia");
             }
         }
-        if (args[0].equals("simonDice")){
-            if (event_roboInventarios){
-                event_roboInventarios = false;
-                SendAllPlayerMessage("Se te paso la peda...");
-            }else{
-                event_roboInventarios = true;
-                SendAllPlayerMessage("Cuidado marioneta... Simon dice...");
+        if (args[0].equals("claustrofobia")) {
+            if (objetoEleccion.event_claustrofobia) {
+                objetoEleccion.event_claustrofobia = false;
+                objetoEleccion.claustroList.clear();
+                sender.sendMessage("La gente ya no tiene claustrofobia");
             }
         }
-
+        if (args[0].equals("acrofobia")) {
+            if (objetoEleccion.event_acrofobia) {
+                objetoEleccion.event_acrofobia = false;
+                objetoEleccion.acroList.clear();
+                sender.sendMessage("La gente ya no tiene acrofobia");
+            }
+        }
         return true;
-
     }
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {

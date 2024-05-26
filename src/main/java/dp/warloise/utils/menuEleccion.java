@@ -25,11 +25,10 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static dp.warloise.DifficultyPlugin.*;
 
@@ -39,6 +38,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     private Inventory menu1;
     private BukkitTask task;
     private final double jumpThreshold = 0.3; // Umbral de distancia para considerar un salto
+    private final Map<Player, Long> playerLastMoveTime = new HashMap<>();
 
     // Agregar los ítems al menú1
     ItemStack diamondSword = createItem(Material.DIAMOND_SWORD, "Espada de Diamante",1,null, "Todos los jugadores", "recibirán una espada de diamente" );
@@ -117,7 +117,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     static ItemStack electionItem52 = createItem(Material.CHEST, "Cofresitos",1,null, "Recibiras 8 cofres para guardar tus cositas ");
     static ItemStack electionItem53 = createItem(Material.ENDER_CHEST, "Cofre del Fin",1,null, "Recibiras un cofre del end ","¡RECUERDA!","una vez colocado en el suelo", "solo se puede recoger con un pico","con toque de seda");
     static ItemStack electionItem54 = createItem(Material.SHULKER_BOX, "Coraza de Merodeador",1,null, "Recibiras una caja de shulker ","El color lo elijo yo jajajajaja");
-    
+
     static ItemStack electionItem55 = createItem(Material.BARRIER, "/gamerule keepInventory false",1,null,"Literalmente eso", "Explotar como palomita", "al morir...");
     static ItemStack electionItem56 = createItem(Material.CHEST, "/gamerule keepInventory true",1,Enchantment.PROTECTION_ENVIRONMENTAL, "Literalmente eso ","Weno lo explico... Al morir","mantendras tus items en el inventario");
 
@@ -133,9 +133,9 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     static ItemStack electionItem64 = createItem(Material.ICE, "Fria noche",1,null, "Si estas en un nivel de luz", "INFERIOR a 5 te empezaras a congelar");
     static ItemStack electionItem65 = createItem(Material.MAGMA_BLOCK, "Dia caluroso",1,null, "Si estas en un nivel de luz", "SUPERIOR a 10 te empezaras a quemar");
 
-    static ItemStack electionItem66 = createItem(Material.CRAFTING_TABLE, "Mezcladora de inventarios",1,null, "Se mezclaran los items de tu inventario", "cada 10 segundos durante 1 minutos...");
-    static ItemStack electionItem67 = createItem(Material.SUGAR, "Robo de inventarios",1,null, "Durante 30 segundos", "Podras robar los inventarios de los jugadores", "cada segundo se abrira el inventario de un jugador al azar","roba todo lo que puedas","TEN CUIDADO QUE NO TE PODRAS MOVER","DURANTE ESE TIEMPO");
-    static ItemStack electionItem68 = createItem(Material.SCULK, "Evento corrupto al azar",1,null, "Agarrate los pantalones", "puede pasar cualquier cosa...");
+    static ItemStack electionItem66 = createItem(Material.ANVIL, "Si te mueves...",1,null, "Se te rompe la armadura,", "Si te mueves se te repara la armadura");
+    static ItemStack electionItem67 = createItem(Material.ROTTEN_FLESH, "Si te mueves...",1,null, "Te baja la comida", "Si te mueves ganas comida");
+    static ItemStack electionItem68 = createItem(Material.EXPERIENCE_BOTTLE, "Si te mueves...",1,null, "Te baja la xp", "Si te mueves ganas xp");
 
     static ItemStack electionItem69 = createItem(Material.NOTE_BLOCK, "Esquizofrenia",1,null, "Durante 2 minutos", "pueden aparecer sonidos de mobs...","o MOBS...");
     static ItemStack electionItem70 = createItem(Material.BLACKSTONE, "Claustrofobia",1,null, "Obtendras oscuridad", "y te ahogaras poco a poco...");
@@ -148,6 +148,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         this.plugin = plugin;
         this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
         createMenu();
+        startArmorCheckTask();
     }
 
     @Override
@@ -185,605 +186,630 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         ItemStack clickedItem = event.getCurrentItem();
 
         //if(task !=null){
-            //task.cancel();
+        //task.cancel();
         //}
         if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
 
 
-        if(event_roboInventarios){
-            Player jugador = (Player) event.getWhoClicked();
-            Inventory inventario = event.getInventory();
-
-            // Verificar si el jugador tiene permiso para dropear ítems (puedes ajustar esto según tu sistema de permisos)
-            if (!jugador.hasPermission("permisos.para.dropear")) {
-                // Cancelar el evento si el jugador intenta mover un ítem fuera de su inventario
-                if (event.getRawSlot() != event.getView().convertSlot(event.getRawSlot())) {
-                    event.setCancelled(true);
-                    jugador.sendMessage("¡No puedes dropear ítems desde tu inventario!");
-                }
-            }
-        }
-
         //Election 1 V
-        if (clickedItem.equals(electionItem1)) {
-            //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
-            if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-            DifficultyPlugin.vote1++;
-            player.closeInventory();
+        switch (objetoEleccion.getEleccionNum()){
+            case 1:
+                if (clickedItem.equals(electionItem1)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem2)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem3)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 2:
+                if (clickedItem.equals(electionItem4)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem5)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem6)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 3:
+                if (clickedItem.equals(electionItem7)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem8)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem9)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 4:
+                if (clickedItem.equals(electionItem10)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem11)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem12)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 5:
+                if (clickedItem.equals(electionItem13)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem14)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem15)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 6:
+                if (clickedItem.equals(electionItem16)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem17)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem18)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 7:
+                if (clickedItem.equals(electionItem19)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem20)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem21)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 8:
+                if (clickedItem.equals(electionItem22)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem23)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem24)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 9:
+                if (clickedItem.equals(electionItem25)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem26)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem27)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 10:
+                if (clickedItem.equals(electionItem28)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem29)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem30)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 11:
+                if (clickedItem.equals(electionItem31)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem32)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem33)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 12:
+                if (clickedItem.equals(electionItem34)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem35)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem36)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 13:
+                if (clickedItem.equals(electionItem37)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem38)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem39)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 14:
+                if (clickedItem.equals(electionItem40)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem41)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem42)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 15:
+                if (clickedItem.equals(electionItem43)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem44)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem45)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 16:
+                if (clickedItem.equals(electionItem46)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem47)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem48)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 17:
+                if (clickedItem.equals(electionItem49)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem50)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem51)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 18:
+                if (clickedItem.equals(electionItem52)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem53)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem54)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 19:
+                if (clickedItem.equals(electionItem55)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem56)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 20:
+                if (clickedItem.equals(electionItem57)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem58)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem59)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 21:
+                if (clickedItem.equals(electionItem60)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem61)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem62)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 22:
+                if (clickedItem.equals(electionItem63)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem64)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem65)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 23:
+                if (clickedItem.equals(electionItem66)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem67)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem68)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 24:
+                if (clickedItem.equals(electionItem69)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem70)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem71)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
         }
-        if (clickedItem.equals(electionItem2)) {
-            //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
-            //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
-            if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-            DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem3)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-            DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 2 V
-        if (clickedItem.equals(electionItem4)) {
-            //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
-            DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem5)) {
-            //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
-            //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
-            DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem6)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 3 V
-        if (clickedItem.equals(electionItem7)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-            DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem8)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-            DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem9)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-            DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 4 V
-        if (clickedItem.equals(electionItem10)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem11)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem12)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 5 V
-        if (clickedItem.equals(electionItem13)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem14)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem15)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 6 V
-        if (clickedItem.equals(electionItem16)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem17)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem18)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 7 V
-        if (clickedItem.equals(electionItem19)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem20)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem21)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 8 V
-        if (clickedItem.equals(electionItem22)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem23)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem24)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 9 V
-        if (clickedItem.equals(electionItem25)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem26)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem27)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 10 V
-        if (clickedItem.equals(electionItem28)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem29)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem30)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 11 V
-        if (clickedItem.equals(electionItem31)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem32)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem33)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 12 V
-        if (clickedItem.equals(electionItem34)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem35)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem36)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 13 V
-        if (clickedItem.equals(electionItem37)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem38)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem39)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 14 V
-        if (clickedItem.equals(electionItem40)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem41)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem42)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 15
-        if (clickedItem.equals(electionItem43)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem44)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem45)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
-        //Election 16
-        if (clickedItem.equals(electionItem46)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem47)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem48)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-        
-        //Election 17
-        if (clickedItem.equals(electionItem49)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem50)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem51)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem52)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem53)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem54)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem55)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem56)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem57)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem58)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem59)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem60)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem61)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem62)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-        	DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem63)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem64)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem65)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem66)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem67)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem68)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem69)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            if (!vote1List.contains(player)){
-                vote1List.add(player);
-            }
-            DifficultyPlugin.vote1++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem70)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            if (!vote2List.contains(player)){
-                vote2List.add(player);
-            }
-            DifficultyPlugin.vote2++;
-            player.closeInventory();
-        }
-        if (clickedItem.equals(electionItem71)) {
-            //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
-            //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
-            if (!vote3List.contains(player)){
-                vote3List.add(player);
-            }
-            DifficultyPlugin.vote3++;
-            player.closeInventory();
-        }
-
         event.setCancelled(true);
     }
 
@@ -799,6 +825,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu1(){
+        objetoEleccion.setEleccionNum(1);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem1);
@@ -807,6 +834,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu2(){
+        objetoEleccion.setEleccionNum(2);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem4);
@@ -815,6 +843,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu3(){
+        objetoEleccion.setEleccionNum(3);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem7);
@@ -823,6 +852,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu4(){
+        objetoEleccion.setEleccionNum(4);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem10);
@@ -831,6 +861,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu5(){
+        objetoEleccion.setEleccionNum(5);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem13);
@@ -839,6 +870,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu6(){
+        objetoEleccion.setEleccionNum(6);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem16);
@@ -847,6 +879,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu7(){
+        objetoEleccion.setEleccionNum(7);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem19);
@@ -855,6 +888,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu8(){
+        objetoEleccion.setEleccionNum(8);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem22);
@@ -863,6 +897,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu9(){
+        objetoEleccion.setEleccionNum(9);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem25);
@@ -871,6 +906,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu10(){
+        objetoEleccion.setEleccionNum(10);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem28);
@@ -879,6 +915,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu11(){
+        objetoEleccion.setEleccionNum(11);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem31);
@@ -887,6 +924,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu12(){
+        objetoEleccion.setEleccionNum(12);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem34);
@@ -895,6 +933,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu13(){
+        objetoEleccion.setEleccionNum(13);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem37);
@@ -903,6 +942,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu14(){
+        objetoEleccion.setEleccionNum(14);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem40);
@@ -911,6 +951,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu15(){
+        objetoEleccion.setEleccionNum(15);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem43);
@@ -919,6 +960,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu16(){
+        objetoEleccion.setEleccionNum(16);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem46);
@@ -927,6 +969,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu17(){
+        objetoEleccion.setEleccionNum(17);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem49);
@@ -935,6 +978,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu18(){
+        objetoEleccion.setEleccionNum(18);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem52);
@@ -943,14 +987,16 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu19(){
+        objetoEleccion.setEleccionNum(19);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem55);
-        
+
         menu.setItem(6, electionItem56);
         return menu;
     }
     public static Inventory createMenu20(){
+        objetoEleccion.setEleccionNum(20);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem57);
@@ -959,6 +1005,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu21(){
+        objetoEleccion.setEleccionNum(21);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem60);
@@ -967,6 +1014,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu22(){
+        objetoEleccion.setEleccionNum(22);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem63);
@@ -975,6 +1023,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu23(){
+        objetoEleccion.setEleccionNum(23);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem66);
@@ -983,6 +1032,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         return menu;
     }
     public static Inventory createMenu24(){
+        objetoEleccion.setEleccionNum(24);
         menu = Bukkit.createInventory(null, 9, "Selecciona un item");
         // Centrar los ítems en el menú
         menu.setItem(2, electionItem69);
@@ -1019,7 +1069,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         meta.addStoredEnchant(enchant, level, true);
         enchantedBook.setItemMeta(meta);
         return enchantedBook;
-        }
+    }
 
     public static void addEnchantments(ItemStack item, Enchantment enchant, int level) {
         ItemMeta meta = item.getItemMeta();
@@ -1039,7 +1089,7 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (event_dangerJump){
+        if (objetoEleccion.event_dangerJump){
             Player player = event.getPlayer();
             Location from = event.getFrom();
             Location to = event.getTo();
@@ -1051,30 +1101,94 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
                 // Puedes realizar otras acciones aquí, como ejecutar comandos, modificar el jugador, etc.
             }
         }
+        if (objetoEleccion.isEvent_movement_repair()){
+            Player player = event.getPlayer();
+            playerLastMoveTime.put(player, System.currentTimeMillis());
+            repairArmor(player);
+        }
+        if (objetoEleccion.isEvent_movement_hunger()){
+            Player player = event.getPlayer();
+            playerLastMoveTime.put(player, System.currentTimeMillis());
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2, 5, true, true));
+
+        }
+        if (objetoEleccion.isEvent_movement_xp()){
+            Player player = event.getPlayer();
+            playerLastMoveTime.put(player, System.currentTimeMillis());
+            increaseXP(player);
+        }
+
+
+    }
+    private void repairArmor(Player player) {
+        for (ItemStack item : player.getInventory().getArmorContents()) {
+            if (item != null && item.getType() != Material.AIR) {
+                item.setDurability((short) (item.getDurability() - 0.01));
+            }
+        }
+    }
+    private void damageArmor(Player player) {
+        for (ItemStack item : player.getInventory().getArmorContents()) {
+            if (item != null && item.getType() != Material.AIR) {
+                item.setDurability((short) (item.getDurability() + 1));
+            }
+        }
     }
 
-    @EventHandler
-    public void onInventoryOpen(InventoryOpenEvent event) {
-        if (event_roboInventarios){
-            if (event.getPlayer() instanceof Player) {
-                Player jugador = (Player) event.getPlayer();
-                Inventory inventario = Robado.getInventory();
-                if(jugador.equals(Robado)){
-                    for(Player player : Bukkit.getOnlinePlayers()){
-                        if (!player.equals(Robado)){
-                            player.openInventory(inventario);
+    private void increaseXP(Player player) {
+        float xp = player.getExp();
+        try{
+            if (xp <= 1){
+                player.setExp(xp + 0.0005f);
+            }
+        }catch(IllegalArgumentException e){
+            player.setLevel(player.getLevel()+1);
+            player.setExp(0);
+        }
+    }
+
+    private void decreaseXP(Player player) {
+        float xp = player.getExp();
+        try{
+            if (xp >= 0){
+                player.setExp(xp - 0.05f);
+            }
+        }catch(IllegalArgumentException e){
+            if (player.getExp() > 0 && player.getLevel()>0){
+                player.setLevel(player.getLevel()-1);
+                player.setExp(1);
+            }
+
+        }
+    }
+
+
+    private void startArmorCheckTask() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                long currentTime = System.currentTimeMillis();
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    long lastMoveTime = playerLastMoveTime.getOrDefault(player, currentTime);
+                    if (currentTime - lastMoveTime > 250) { // 0.25 seconds
+                        //SendAllPlayerMessage("¡No te quedes quieto que se te lia!");
+                        if (objetoEleccion.isEvent_movement_repair()){
+                            damageArmor(player);
+                        }
+                        if (objetoEleccion.isEvent_movement_hunger()){
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 20, 250, true, true));
+                        }
+                        if (objetoEleccion.isEvent_movement_xp()){
+                            decreaseXP(player);
+                        }
+                        if (!objetoEleccion.isEvent_movement_repair() && !objetoEleccion.isEvent_movement_hunger() && !objetoEleccion.isEvent_movement_xp()){
+                            this.cancel();
                         }
                     }
                 }
             }
-        }
+        }.runTaskTimer(plugin, 0L, 20L); // Run every second (20 ticks)
     }
-    public void onPlayerDropItem(PlayerDropItemEvent event){
-        Player jugador = event.getPlayer();
-        // Verificar si el jugador tiene permiso para dropear ítems (puedes ajustar esto según tu sistema de permisos)
-        if (event_roboInventarios) {
-            event.setCancelled(true);
-            jugador.sendMessage("¡No puedes dropear ítems!");
-        }
-    }
+
+
 }
