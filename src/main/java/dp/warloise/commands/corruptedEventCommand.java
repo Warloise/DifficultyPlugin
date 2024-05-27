@@ -98,6 +98,13 @@ public class corruptedEventCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage("La gente ya no tiene acrofobia");
             }
         }
+        if (args[0].equals("movementPassive")) {
+        	objetoEleccion.movementPassive.cancel();
+        	objetoEleccion.event_movement_repair = false;
+        	objetoEleccion.event_movement_hunger = false;
+        	objetoEleccion.event_movement_xp = false;
+        	SendAllPlayerMessage("Ya puedes moverte con normalidad...");
+        }
         return true;
     }
     @Override

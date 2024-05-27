@@ -35,11 +35,6 @@ public class DifficultyPlugin extends JavaPlugin {
 	//Try
 	public static Eleccion objetoEleccion;
 
-
-
-
-
-
 	public static int time_days=0;
 	public static int time_hours=0;
 	public static int time_min=0;
@@ -308,17 +303,6 @@ public class DifficultyPlugin extends JavaPlugin {
 	public double calcularDistancia(Location loc1, Location loc2){
 		return loc1.distance(loc2);
 	}
-	private void intercambiarInventarios(Player jugador1, Player jugador2) {
-		// Guardar los inventarios en variables temporales
-		ItemStack[] inventarioTemporalJugador1 = jugador1.getInventory().getContents().clone();
-		ItemStack[] inventarioTemporalJugador2 = jugador2.getInventory().getContents().clone();
-		// Borrar los inventarios de ambos jugadores
-		jugador1.getInventory().clear();
-		jugador2.getInventory().clear();
-		// Asignar los inventarios guardados a los jugadores opuestos
-		jugador1.getInventory().setContents(inventarioTemporalJugador2);
-		jugador2.getInventory().setContents(inventarioTemporalJugador1);
-	}
 
 	public static void SendAllPlayerMessage(String message) {
 		for (Player jugador : Bukkit.getOnlinePlayers()) {
@@ -335,14 +319,6 @@ public class DifficultyPlugin extends JavaPlugin {
 		}
 		return true;
 	}
-
-
-
-
-
-
-
-
 }
 
 

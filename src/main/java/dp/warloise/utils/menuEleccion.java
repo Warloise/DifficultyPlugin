@@ -1162,7 +1162,6 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         }
     }
 
-
     private void startArmorCheckTask() {
         new BukkitRunnable() {
             @Override

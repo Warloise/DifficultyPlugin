@@ -39,9 +39,9 @@ public class Eleccion {
     private int maxVotes = 0;
     private int generalWinner = 0;
 
-    private boolean event_movement_repair=false;
-    private boolean event_movement_hunger=false;
-    private boolean event_movement_xp=false;
+    public boolean event_movement_repair=false;
+    public boolean event_movement_hunger=false;
+    public boolean event_movement_xp=false;
 
     //Corrupted events
     public boolean event_highGravity = false;
@@ -61,6 +61,9 @@ public class Eleccion {
     public boolean event_acrofobia = false;
     public int event_acrofobia_time = 0;
 
+    
+    //Passives
+    public BukkitRunnable movementPassive; 
 
 
     private int event_movement_time=0;
@@ -941,7 +944,7 @@ public class Eleccion {
 
 
     public void movementPassive(){
-        new BukkitRunnable() {
+        movementPassive = new BukkitRunnable() {
             public void run() {
                 event_movement_time++;
                 if (event_movement_time>=(60*5)){
@@ -952,10 +955,9 @@ public class Eleccion {
                     SendAllPlayerMessage("Ya puedes moverte con normalidad...");
                     this.cancel();
                 }
-
-
             }
-        }.runTaskTimer(plugin,0,20);
+        };
+        movementPassive.runTaskTimer(plugin,0,20);
     }
     public void DanoProlongadoPassive(){
         new BukkitRunnable() {
