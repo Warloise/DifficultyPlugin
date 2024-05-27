@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,10 +16,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Vector;
-
 import static dp.warloise.DifficultyPlugin.*;
 import static dp.warloise.utils.menuEleccion.*;
-import static dp.warloise.utils.menuEleccion.createEnchantmentBook;
 
 public class Eleccion {
 
@@ -597,7 +594,7 @@ public class Eleccion {
         generalWinner=0;
 
     }
-    public void ElectionMainWinnersPerVote() {
+    public void ElectionMainWinnersPerVote(){
         switch (eleccionNum){
             case 1:
                 for (Player votador1 : vote1List){

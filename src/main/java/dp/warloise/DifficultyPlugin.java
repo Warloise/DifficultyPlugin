@@ -2,29 +2,20 @@ package dp.warloise;
 
 import dp.warloise.commands.*;
 import dp.warloise.utils.Eleccion;
+import dp.warloise.utils.EntitySpawnListener;
 import dp.warloise.utils.menuEleccion;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import dp.warloise.utils.EntitySpawnListener;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 
 import static dp.warloise.utils.menuEleccion.*;
 
