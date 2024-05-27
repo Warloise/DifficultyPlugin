@@ -31,7 +31,7 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
             return true;
         }
         if (args[0].equals("random")){
-            int randomNum = (int) (Math.random() * 24) + 1;
+            int randomNum = (int) (Math.random() * 25) + 1;
             switch (randomNum) {
                 case 1:
                     objetoEleccion.StartElectionMainIndividual(createMenu1());
@@ -108,6 +108,9 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
                     break;
                 case 24:
                     objetoEleccion.StartElectionMainIndividual(createMenu24());
+                    break;
+                case 25:
+                    objetoEleccion.StartElectionMainGeneral(createMenu25());
                     break;
             }
         }
@@ -187,6 +190,9 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         if (args[0].equals("election24")){
             objetoEleccion.StartElectionMainIndividual(createMenu24());
         }
+        if (args[0].equals("election25")){
+            objetoEleccion.StartElectionMainGeneral(createMenu25());
+        }
         return true;
     }
     @Override
@@ -194,7 +200,7 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             completions.add("random");
-            for (int i=1;i<=24;i++){
+            for (int i=1;i<=25;i++){
                 completions.add("election"+i);
             }
         }

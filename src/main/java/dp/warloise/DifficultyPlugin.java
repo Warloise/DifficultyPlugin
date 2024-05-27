@@ -274,7 +274,7 @@ public class DifficultyPlugin extends JavaPlugin {
 		config.set("SpawnEntities.EnemyDifficulty.CreepersCharged", SpawnEntities_EnemyDifficulty_CreepersCharged);
 		config.set("SpawnEntities.EnemyDifficulty.EndermansAgressives", SpawnEntities_EnemyDifficulty_EndermansAgressives);
 		config.set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives", SpawnEntities_EnemyDifficulty_PigsArePigmansAgressives);
-		
+
 		config.set("SpawnEntities.DistanceEnemyDifficulty.Trigger", SpawnEntities_DistanceEnemyDifficulty_Trigger);
 		config.set("SpawnEntities.DistanceEnemyDifficulty.Period", SpawnEntities_DistanceEnemyDifficulty_Period);
 		config.set("SpawnEntities.DistanceEnemyDifficulty.Start", SpawnEntities_DistanceEnemyDifficulty_Start);

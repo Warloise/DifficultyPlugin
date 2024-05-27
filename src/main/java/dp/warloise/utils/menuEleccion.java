@@ -141,6 +141,12 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     static ItemStack electionItem70 = createItem(Material.BLACKSTONE, "Claustrofobia",1,null, "Obtendras oscuridad", "y te ahogaras poco a poco...");
     static ItemStack electionItem71 = createItem(Material.FEATHER, "Acrofobia",1,null, "Empezaras a flotar con levitación...", "La caida puede ser mortal...","Recibiras un cubo de agua tranquilo/a...");
 
+    static ItemStack electionItem72 = createItem(Material.CREEPER_SPAWN_EGG, "¡A cargar las pilas!",1,null, "Todos los creepers que spawneen", "seran CARGADOS","¡bum bum bum!","Activar");
+    static ItemStack electionItem73 = createItem(Material.ENDERMAN_SPAWN_EGG, "Ni que los mires...",1,null, "Todos los endermans que spawneen", "seran AGRESIVOS","¿tendran problemas de ira o algo?","Activar");
+    static ItemStack electionItem74 = createItem(Material.PIGLIN_SPAWN_EGG, "Yo no los recordaba asi...",1,null, "Todos los cerdos que spawneen", "Se convertiran en brutos","¿Quien puso esto en el guion?","Activar");
+    static ItemStack electionItem72_e = createItem(Material.CREEPER_SPAWN_EGG, "¡A cargar las pilas!",1,Enchantment.CHANNELING, "Todos los creepers que spawneen", "seran CARGADOS","¡bum bum bum!","Desactivar");
+    static ItemStack electionItem73_e = createItem(Material.ENDERMAN_SPAWN_EGG, "Ni que los mires...",1,Enchantment.DAMAGE_ALL, "Todos los endermans que spawneen", "seran AGRESIVOS","¿tendran problemas de ira o algo?","Desactivar");
+    static ItemStack electionItem74_e = createItem(Material.PIGLIN_SPAWN_EGG, "Yo no los recordaba asi...",1,Enchantment.DAMAGE_ALL, "Todos los cerdos que spawneen", "Se convertiran en brutos","¿Quien puso esto en el guion?","Desactivar");
 
 
 
@@ -809,6 +815,56 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
                     player.closeInventory();
                 }
                 break;
+            case 25:
+                if (clickedItem.equals(electionItem72)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem73)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem74)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem72_e)) {
+                    //player.sendMessage("¡Has seleccionado la Espada de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_SWORD, "Espada de Diamante", "¡La mejor espada!", "¡Para los guerreros más valientes!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem73_e)) {
+                    //player.sendMessage("¡Has seleccionado la Manzana Dorada!");
+                    //player.getInventory().addItem(createItem(Material.GOLDEN_APPLE, "Manzana Dorada", "¡Recupera tu salud!", "¡Una delicia dorada!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem74_e)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
         }
         event.setCancelled(true);
     }
@@ -819,10 +875,6 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         menu.setItem(2, diamondSword);
         menu.setItem(4, goldenApple);
         menu.setItem(6, diamondPickaxe);
-    }
-    public static Inventory createMenuSimonDice(String nombreJugador) {
-        menu = Bukkit.createInventory(null, 27, "Roba roba a "+nombreJugador);
-        return menu;
     }
     public static Inventory createMenu1(){
         objetoEleccion.setEleccionNum(1);
@@ -1038,6 +1090,27 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         menu.setItem(2, electionItem69);
         menu.setItem(4, electionItem70);
         menu.setItem(6, electionItem71);
+        return menu;
+    }
+    public static Inventory createMenu25(){
+        objetoEleccion.setEleccionNum(25);
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        if(config.getBoolean("SpawnEntities.EnemyDifficulty.CreepersCharged")){
+            menu.setItem(2, electionItem72_e);
+        }else{
+            menu.setItem(2, electionItem72);
+        }
+        // Centrar los ítems en el menú
+        if(config.getBoolean("SpawnEntities.EnemyDifficulty.EndermansAgressives")){
+            menu.setItem(4, electionItem73_e);
+        }else{
+            menu.setItem(4, electionItem73);
+        }
+        if(config.getBoolean("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives")){
+            menu.setItem(6, electionItem74_e);
+        }else{
+            menu.setItem(6, electionItem74);
+        }
         return menu;
     }
 

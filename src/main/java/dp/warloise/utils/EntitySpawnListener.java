@@ -6,14 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Enderman;
-import org.bukkit.entity.Enemy;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.BatToggleSleepEvent;
@@ -90,64 +83,7 @@ public class EntitySpawnListener implements Listener {
                     }
                 }
             }
-            
-            if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.CreepersCharged")) {
-            	if (entity.getType() == EntityType.CREEPER) {
-                    Creeper creeper = (Creeper) entity;
-                    // Hacer que el Creeper esté cargado
-                    creeper.setPowered(true);
-                }
-            }
-            if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.EndermansAgressives")) {
-            	// Verificar si la entidad generada es un Enderman
-                if (entity.getType() == EntityType.ENDERMAN) {
-                    Enderman enderman = (Enderman) entity;
-                    // Buscar un jugador cercano
-                    Player nearestPlayer = null;
-                    double nearestDistance = Double.MAX_VALUE;
-                    for (Player player : entity.getWorld().getPlayers()) {
-                        double distance = player.getLocation().distance(entity.getLocation());
-                        if (distance < nearestDistance) {
-                            nearestDistance = distance;
-                            nearestPlayer = player;
-                        }
-                    }
-                    // Si hay un jugador cerca, hacer que el Enderman se vuelva agresivo hacia él
-                    if (nearestPlayer != null) {
-                        enderman.setTarget(nearestPlayer);
-                    }
-                }
-            }
-            if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives")) {
-            	// Verificar si la entidad generada es un cerdo
-            	
-                if (entity.getType() == EntityType.PIG) {
-                    Pig pig = (Pig) entity;
 
-                    // Convertir el cerdo en un Zombie Pigman
-                    PigZombie pigman = (PigZombie) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ZOMBIFIED_PIGLIN);
-                    pigman.setAngry(true); // Hacer que el Zombie Pigman esté enfadado
-                    pig.remove(); // Eliminar el cerdo original
-
-                    // Buscar un jugador cercano y hacer que el Pigman sea agresivo hacia él
-                    Player nearestPlayer = null;
-                    double nearestDistance = Double.MAX_VALUE;
-
-                    for (Player player : entity.getWorld().getPlayers()) {
-                        double distance = player.getLocation().distance(entity.getLocation());
-                        if (distance < nearestDistance) {
-                            nearestDistance = distance;
-                            nearestPlayer = player;
-                        }
-                    }
-
-                    // Si hay un jugador cerca, hacer que el Pigman se vuelva agresivo hacia él
-                    if (nearestPlayer != null) {
-                        pigman.setTarget(nearestPlayer);
-                    }
-                }
-            }
-            
             //Este bloque reacciona para las entidades que llegan a ciertas distancias de render, al generarse estan mas fuertes.
             if (plugin.getConfig().getBoolean("SpawnEntities.DistanceEnemyDifficulty.Trigger")) {
                 //Rename entity by maxRange?
@@ -227,6 +163,61 @@ public class EntitySpawnListener implements Listener {
                         timeAmplifier = realTimeSeconds / plugin.getConfig().getInt("SpawnEntities.TimeEnemyDifficulty.TimePeriodScale");
                         TimeControl(timeAmplifier,enemigo);
                     }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.CreepersCharged")) {
+            if (entity.getType() == EntityType.CREEPER) {
+                assert entity instanceof Creeper;
+                Creeper creeper = (Creeper) entity;
+                // Hacer que el Creeper esté cargado
+                creeper.setPowered(true);
+            }
+        }
+        if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.EndermansAgressives")) {
+            // Verificar si la entidad generada es un Enderman
+            if (entity.getType() == EntityType.ENDERMAN) {
+                assert entity instanceof Enderman;
+                Enderman enderman = (Enderman) entity;
+                // Buscar un jugador cercano
+                Player nearestPlayer = null;
+                double nearestDistance = Double.MAX_VALUE;
+                for (Player player : entity.getWorld().getPlayers()) {
+                    double distance = player.getLocation().distance(entity.getLocation());
+                    if (distance < nearestDistance) {
+                        nearestDistance = distance;
+                        nearestPlayer = player;
+                    }
+                }
+                // Si hay un jugador cerca, hacer que el Enderman se vuelva agresivo hacia él
+                if (nearestPlayer != null) {
+                    enderman.setTarget(nearestPlayer);
+                }
+            }
+        }
+        if (plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives")) {
+            // Verificar si la entidad generada es un cerdo
+            if (entity.getType() == EntityType.PIG) {
+                Pig pig = (Pig) entity;
+
+                // Convertir el cerdo en un Piglin Brute
+                Entity piglinBrute = pig.getWorld().spawnEntity(pig.getLocation(), EntityType.PIGLIN_BRUTE);
+                pig.remove(); // Eliminar el cerdo original
+
+                // Hacer que el Piglin Brute sea agresivo hacia el jugador más cercano
+                Player nearestPlayer = null;
+                double nearestDistance = Double.MAX_VALUE;
+
+                for (Player player : entity.getWorld().getPlayers()) {
+                    double distance = player.getLocation().distance(entity.getLocation());
+                    if (distance < nearestDistance) {
+                        nearestDistance = distance;
+                        nearestPlayer = player;
+                    }
+                }
+
+                if (nearestPlayer != null && piglinBrute instanceof PiglinBrute) {
+                    ((PiglinBrute) piglinBrute).setTarget(nearestPlayer);
                 }
             }
         }

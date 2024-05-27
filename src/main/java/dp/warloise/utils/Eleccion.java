@@ -517,7 +517,37 @@ public class Eleccion {
                         break;
                 }
                 break;
-
+            case 25:
+                switch (generalWinner){
+                    case 1:
+                        if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.CreepersCharged")){
+                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.CreepersCharged",false);
+                            config.set("SpawnEntities.EnemyDifficulty.CreepersCharged", false);
+                        }else{
+                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.CreepersCharged",true);
+                            config.set("SpawnEntities.EnemyDifficulty.CreepersCharged", true);
+                        }
+                        break;
+                    case 2:
+                        if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.EndermansAgressives")){
+                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.EndermansAgressives",false);
+                            config.set("SpawnEntities.EnemyDifficulty.EndermansAgressives", false);
+                        }else{
+                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.EndermansAgressives",true);
+                            config.set("SpawnEntities.EnemyDifficulty.EndermansAgressives", true);
+                        }
+                        break;
+                    case 3:
+                        if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives")){
+                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives",false);
+                            config.set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives", false);
+                        }else{
+                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives",true);
+                            config.set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives", true);
+                        }
+                        break;
+                }
+                break;
         }
         eleccionNum=0;
         generalWinner=0;
@@ -937,11 +967,6 @@ public class Eleccion {
             }
         }.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
     }
-
-
-
-
-
 
     public void movementPassive(){
         movementPassive = new BukkitRunnable() {
