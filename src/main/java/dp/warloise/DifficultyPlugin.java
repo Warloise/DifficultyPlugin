@@ -54,6 +54,9 @@ public class DifficultyPlugin extends JavaPlugin {
 	public static boolean SpawnEntities_EnemyDifficulty_FireResistanceEffect=false;
 	public static boolean SpawnEntities_EnemyDifficulty_DolphinsGraceEffect=false;
 	public static int SpawnEntities_EnemyDifficulty_DolphinsGraceEffectLvL=1;
+	public static boolean SpawnEntities_EnemyDifficulty_CreepersCharged=false;
+	public static boolean SpawnEntities_EnemyDifficulty_EndermansAgressives=false;
+	public static boolean SpawnEntities_EnemyDifficulty_PigsArePigmansAgressives=false;
 	public static boolean SpawnEntities_DistanceEnemyDifficulty_Trigger=false;
 	public static int SpawnEntities_DistanceEnemyDifficulty_Period=500;
 	public static int SpawnEntities_DistanceEnemyDifficulty_Start=0;
@@ -117,6 +120,9 @@ public class DifficultyPlugin extends JavaPlugin {
 				config.set("SpawnEntities.EnemyDifficulty.FireResistanceEffect", false);
 				config.set("SpawnEntities.EnemyDifficulty.DolphinsGraceEffect", false);
 				config.set("SpawnEntities.EnemyDifficulty.DolphinsGraceEffectLvL", 1);
+				config.set("SpawnEntities.EnemyDifficulty.CreepersCharged", false);
+				config.set("SpawnEntities.EnemyDifficulty.EndermansAgressives", false);
+				config.set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives", false);
 
 				config.set("SpawnEntities.DistanceEnemyDifficulty.Trigger", false);
 				config.set("SpawnEntities.DistanceEnemyDifficulty.Center.X", 0);
@@ -265,7 +271,10 @@ public class DifficultyPlugin extends JavaPlugin {
 		config.set("SpawnEntities.EnemyDifficulty.FireResistanceEffect", SpawnEntities_EnemyDifficulty_FireResistanceEffect);
 		config.set("SpawnEntities.EnemyDifficulty.DolphinsGraceEffect", SpawnEntities_EnemyDifficulty_DolphinsGraceEffect);
 		config.set("SpawnEntities.EnemyDifficulty.DolphinsGraceEffectLvL", SpawnEntities_EnemyDifficulty_DolphinsGraceEffectLvL);
-
+		config.set("SpawnEntities.EnemyDifficulty.CreepersCharged", SpawnEntities_EnemyDifficulty_CreepersCharged);
+		config.set("SpawnEntities.EnemyDifficulty.EndermansAgressives", SpawnEntities_EnemyDifficulty_EndermansAgressives);
+		config.set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives", SpawnEntities_EnemyDifficulty_PigsArePigmansAgressives);
+		
 		config.set("SpawnEntities.DistanceEnemyDifficulty.Trigger", SpawnEntities_DistanceEnemyDifficulty_Trigger);
 		config.set("SpawnEntities.DistanceEnemyDifficulty.Period", SpawnEntities_DistanceEnemyDifficulty_Period);
 		config.set("SpawnEntities.DistanceEnemyDifficulty.Start", SpawnEntities_DistanceEnemyDifficulty_Start);
