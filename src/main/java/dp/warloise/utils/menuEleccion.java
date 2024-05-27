@@ -17,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
@@ -148,6 +149,12 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     static ItemStack electionItem73_e = createItem(Material.ENDERMAN_SPAWN_EGG, "Ni que los mires...",1,Enchantment.DAMAGE_ALL, "Todos los endermans que spawneen", "seran AGRESIVOS","¿tendran problemas de ira o algo?","Desactivar");
     static ItemStack electionItem74_e = createItem(Material.PIGLIN_SPAWN_EGG, "Yo no los recordaba asi...",1,Enchantment.DAMAGE_ALL, "Todos los cerdos que spawneen", "Se convertiran en brutos","¿Quien puso esto en el guion?","Desactivar");
 
+    static ItemStack electionItem75 = createItem(Material.BARRIER, "No hacer nada",1,null, "/do ¿passaria algo?", "/do 99,93% que no passaria nada");
+    static ItemStack electionItem76 = createItem(Material.VILLAGER_SPAWN_EGG, "¿Aldeanos?",1,null, "¿Poder tradear com aldeanos?", "Desactivado");
+    static ItemStack electionItem76_e = createItem(Material.VILLAGER_SPAWN_EGG, "¿Aldeanos?",1,Enchantment.MENDING, "¿Poder tradear com aldeanos?", "Activado");
+
+    static ItemStack electionItem77 = createItem(Material.SPYGLASS, "¿Aumento de dificultad?",1,null, "Uish parece que NO va a augmentar la dificultad...", "Has tenido suerte...");
+    static ItemStack electionItem77_e = createItem(Material.SPYGLASS, "¿Aumento de dificultad?",1,Enchantment.THORNS, "Preparate va a aumentar la dificultad", "Prepara el gluteo jejejejeje");
 
 
     public menuEleccion(DifficultyPlugin plugin) {
@@ -182,6 +189,17 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         return new ArrayList<>();
+    }
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        // Verificar si el inventario que se abre es del tipo MERCHANT (comercio de aldeano)
+        if(!config.getBoolean("SpawnEntities.EnemyDifficulty.VillagerTrades")){
+            if (event.getInventory().getType() == InventoryType.MERCHANT) {
+                Player player = (Player) event.getPlayer();
+                player.sendMessage("No puedes comerciar con aldeanos.");
+                event.setCancelled(true); // Cancelar la apertura del inventario
+            }
+        }
     }
 
     @EventHandler
@@ -865,6 +883,50 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
                     player.closeInventory();
                 }
                 break;
+            case 26:
+                if (clickedItem.equals(electionItem75)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem76)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem76_e)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 27:
+                if (clickedItem.equals(electionItem77)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem77_e)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
         }
         event.setCancelled(true);
     }
@@ -1110,6 +1172,29 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
             menu.setItem(6, electionItem74_e);
         }else{
             menu.setItem(6, electionItem74);
+        }
+        return menu;
+    }
+    public static Inventory createMenu26(){
+        objetoEleccion.setEleccionNum(26);
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem75);
+        if(config.getBoolean("SpawnEntities.EnemyDifficulty.VillagerTrades")){
+            menu.setItem(6, electionItem76_e);
+        }else{
+            menu.setItem(6, electionItem76);
+        }
+        return menu;
+    }
+    public static Inventory createMenu27(){
+        objetoEleccion.setEleccionNum(27);
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        if(SpawnEntities_EnemyDifficulty_Trigger){
+            menu.setItem(4, electionItem77_e);
+        }else{
+            menu.setItem(4, electionItem77);
         }
         return menu;
     }

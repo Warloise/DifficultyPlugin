@@ -521,31 +521,75 @@ public class Eleccion {
                 switch (generalWinner){
                     case 1:
                         if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.CreepersCharged")){
-                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.CreepersCharged",false);
                             config.set("SpawnEntities.EnemyDifficulty.CreepersCharged", false);
+                            SpawnEntities_EnemyDifficulty_CreepersCharged=false;
+                            plugin.saveConfig();
+                            plugin.reloadConfig();
                         }else{
-                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.CreepersCharged",true);
                             config.set("SpawnEntities.EnemyDifficulty.CreepersCharged", true);
+                            SpawnEntities_EnemyDifficulty_CreepersCharged=true;
+                            plugin.saveConfig();
+                            plugin.reloadConfig();
                         }
                         break;
                     case 2:
                         if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.EndermansAgressives")){
-                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.EndermansAgressives",false);
                             config.set("SpawnEntities.EnemyDifficulty.EndermansAgressives", false);
+                            SpawnEntities_EnemyDifficulty_EndermansAgressives=false;
+                            plugin.saveConfig();
+                            plugin.reloadConfig();
                         }else{
-                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.EndermansAgressives",true);
+                            SpawnEntities_EnemyDifficulty_EndermansAgressives=true;
                             config.set("SpawnEntities.EnemyDifficulty.EndermansAgressives", true);
+                            plugin.saveConfig();
+                            plugin.reloadConfig();
                         }
                         break;
                     case 3:
                         if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives")){
-                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives",false);
                             config.set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives", false);
+                            SpawnEntities_EnemyDifficulty_PigsArePigmansAgressives=false;
+                            plugin.saveConfig();
+                            plugin.reloadConfig();
                         }else{
-                            plugin.getConfig().set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives",true);
                             config.set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives", true);
+                            SpawnEntities_EnemyDifficulty_PigsArePigmansAgressives=true;
+                            plugin.saveConfig();
+                            plugin.reloadConfig();
                         }
                         break;
+                }
+                break;
+            case 26:
+                switch (generalWinner){
+                    case 1:
+                        SendAllPlayerMessage("Te he dicho que no passaria nada...");
+                    case 2:
+                        if(plugin.getConfig().getBoolean("SpawnEntities.EnemyDifficulty.VillagerTrades")){
+                            config.set("SpawnEntities.EnemyDifficulty.VillagerTrades", false);
+                            SpawnEntities_EnemyDifficulty_VillagerTrades=false;
+                            plugin.saveConfig();
+                            plugin.reloadConfig();
+                        }else{
+                            config.set("SpawnEntities.EnemyDifficulty.VillagerTrades", true);
+                            SpawnEntities_EnemyDifficulty_VillagerTrades=true;
+                            plugin.saveConfig();
+                            plugin.reloadConfig();
+                        }
+                        break;
+                }
+                break;
+            case 27:
+                if(SpawnEntities_EnemyDifficulty_Trigger){
+                    SendAllPlayerMessage("Se ha augmentado la dificultad");
+                    SpawnEntities_EnemyDifficulty_SpeedEffectLvL++;
+                    config.set("SpawnEntities.EnemyDifficulty.SpeedEffectLvL", SpawnEntities_EnemyDifficulty_SpeedEffectLvL);
+                    SpawnEntities_EnemyDifficulty_ResistanceEffectLvL++;
+                    config.set("SpawnEntities.EnemyDifficulty.ResistanceEffectLvL", SpawnEntities_EnemyDifficulty_ResistanceEffectLvL);
+                    SpawnEntities_EnemyDifficulty_StrengthEffectLvL++;
+                    config.set("SpawnEntities.EnemyDifficulty.StrengthEffectLvL", SpawnEntities_EnemyDifficulty_StrengthEffectLvL);
+                    plugin.saveConfig();
+                    plugin.reloadConfig();
                 }
                 break;
         }

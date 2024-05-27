@@ -57,6 +57,7 @@ public class DifficultyPlugin extends JavaPlugin {
 	public static boolean SpawnEntities_EnemyDifficulty_CreepersCharged=false;
 	public static boolean SpawnEntities_EnemyDifficulty_EndermansAgressives=false;
 	public static boolean SpawnEntities_EnemyDifficulty_PigsArePigmansAgressives=false;
+	public static boolean SpawnEntities_EnemyDifficulty_VillagerTrades=true;
 	public static boolean SpawnEntities_DistanceEnemyDifficulty_Trigger=false;
 	public static int SpawnEntities_DistanceEnemyDifficulty_Period=500;
 	public static int SpawnEntities_DistanceEnemyDifficulty_Start=0;
@@ -123,6 +124,7 @@ public class DifficultyPlugin extends JavaPlugin {
 				config.set("SpawnEntities.EnemyDifficulty.CreepersCharged", false);
 				config.set("SpawnEntities.EnemyDifficulty.EndermansAgressives", false);
 				config.set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives", false);
+				config.set("SpawnEntities.EnemyDifficulty.VillagerTrades", true);
 
 				config.set("SpawnEntities.DistanceEnemyDifficulty.Trigger", false);
 				config.set("SpawnEntities.DistanceEnemyDifficulty.Center.X", 0);
@@ -166,6 +168,33 @@ public class DifficultyPlugin extends JavaPlugin {
 		// Guardar los cambios en el archivo de configuración
 		config = YamlConfiguration.loadConfiguration(configFile);
 
+		SpawnEntities_EnemyDifficulty_Trigger=getConfig().getBoolean("SpawnEntities.EnemyDifficulty.Trigger");
+		SpawnEntities_EnemyDifficulty_ProbabilityMin=getConfig().getInt("SpawnEntities.EnemyDifficulty.ProbabilityMin");
+		SpawnEntities_EnemyDifficulty_ProbabilityMax=getConfig().getInt("SpawnEntities.EnemyDifficulty.ProbabilityMax");
+		SpawnEntities_EnemyDifficulty_SpeedEffect=getConfig().getBoolean("SpawnEntities.EnemyDifficulty.SpeedEffect");
+		SpawnEntities_EnemyDifficulty_SpeedEffectLvL=getConfig().getInt("SpawnEntities.EnemyDifficulty.SpeedEffectLvL");
+		SpawnEntities_EnemyDifficulty_ResistanceEffect=getConfig().getBoolean("SpawnEntities.EnemyDifficulty.ResistanceEffect");
+		SpawnEntities_EnemyDifficulty_ResistanceEffectLvL=getConfig().getInt("SpawnEntities.EnemyDifficulty.ResistanceEffectLvL");
+		SpawnEntities_EnemyDifficulty_StrengthEffect=getConfig().getBoolean("SpawnEntities.EnemyDifficulty.StrengthEffect");
+		SpawnEntities_EnemyDifficulty_StrengthEffectLvL=getConfig().getInt("SpawnEntities.EnemyDifficulty.StrengthEffectLvL");
+		SpawnEntities_EnemyDifficulty_GlowingEffect=getConfig().getBoolean("SpawnEntities.EnemyDifficulty.GlowingEffect");
+		SpawnEntities_EnemyDifficulty_FireResistanceEffect=getConfig().getBoolean("SpawnEntities.EnemyDifficulty.FireResistanceEffect");
+		SpawnEntities_EnemyDifficulty_DolphinsGraceEffect=getConfig().getBoolean("SpawnEntities.EnemyDifficulty.DolphinsGraceEffect");
+		SpawnEntities_EnemyDifficulty_DolphinsGraceEffectLvL=getConfig().getInt("SpawnEntities.EnemyDifficulty.DolphinsGraceEffectLvL");
+		SpawnEntities_EnemyDifficulty_CreepersCharged = getConfig().getBoolean("SpawnEntities.EnemyDifficulty.CreepersCharged");
+		SpawnEntities_EnemyDifficulty_EndermansAgressives = getConfig().getBoolean("SpawnEntities.EnemyDifficulty.EndermansAgressives");
+		SpawnEntities_EnemyDifficulty_PigsArePigmansAgressives = getConfig().getBoolean("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives");
+
+
+		SpawnEntities_DistanceEnemyDifficulty_Trigger=getConfig().getBoolean("SpawnEntities.DistanceEnemyDifficulty.Trigger");
+		SpawnEntities_DistanceEnemyDifficulty_Period=getConfig().getInt("SpawnEntities.DistanceEnemyDifficulty.Period");
+		SpawnEntities_DistanceEnemyDifficulty_Start=getConfig().getInt("SpawnEntities.DistanceEnemyDifficulty.Start");
+		SpawnEntities_TimeEnemyDifficulty_Trigger=getConfig().getBoolean("SpawnEntities.TimeEnemyDifficulty.Trigger");
+		SpawnEntities_TimeEnemyDifficulty_TimePeriodScale=getConfig().getInt("SpawnEntities.TimeEnemyDifficulty.TimePeriodScale");
+		SpawnEntities_TimeEnemyDifficulty_TimeScale=getConfig().getString("SpawnEntities.TimeEnemyDifficulty.TimeScale");
+		Huracane_Trigger=getConfig().getBoolean("Huracane.Trigger");
+		Huracane_DamageScale=getConfig().getInt("Huracane.DamageScale");
+		Huracane_Period=getConfig().getInt("Huracane.Period");
 		DistanceEnemyDifficulty_CenterX=getConfig().getInt("SpawnEntities.DistanceEnemyDifficulty.Center.X");
 		DistanceEnemyDifficulty_CenterY=getConfig().getInt("SpawnEntities.DistanceEnemyDifficulty.Center.Y");
 		DistanceEnemyDifficulty_CenterZ=getConfig().getInt("SpawnEntities.DistanceEnemyDifficulty.Center.Z");
@@ -258,13 +287,13 @@ public class DifficultyPlugin extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(
 				ChatColor.translateAlternateColorCodes('&',prefix+"&eGracias por usar mi plugin"));
 
-		config.set("SpawnEntities.EnemyDifficulty.Trigger", SpawnEntities_DistanceEnemyDifficulty_Trigger);
+		config.set("SpawnEntities.EnemyDifficulty.Trigger", SpawnEntities_EnemyDifficulty_Trigger);
 		config.set("SpawnEntities.EnemyDifficulty.ProbabilityMin", SpawnEntities_EnemyDifficulty_ProbabilityMin);
 		config.set("SpawnEntities.EnemyDifficulty.ProbabilityMax", SpawnEntities_EnemyDifficulty_ProbabilityMax);
 		config.set("SpawnEntities.EnemyDifficulty.SpeedEffect", SpawnEntities_EnemyDifficulty_SpeedEffect);
-		config.set("SpawnEntities.EnemyDifficulty.SpeedEffectLvL", SpawnEntities_EnemyDifficulty_ResistanceEffectLvL);
+		config.set("SpawnEntities.EnemyDifficulty.SpeedEffectLvL", SpawnEntities_EnemyDifficulty_SpeedEffectLvL);
 		config.set("SpawnEntities.EnemyDifficulty.ResistanceEffect", SpawnEntities_EnemyDifficulty_ResistanceEffect);
-		config.set("SpawnEntities.EnemyDifficulty.ResistanceEffectLvL", SpawnEntities_EnemyDifficulty_DolphinsGraceEffectLvL);
+		config.set("SpawnEntities.EnemyDifficulty.ResistanceEffectLvL", SpawnEntities_EnemyDifficulty_ResistanceEffectLvL);
 		config.set("SpawnEntities.EnemyDifficulty.StrengthEffect", SpawnEntities_EnemyDifficulty_StrengthEffect);
 		config.set("SpawnEntities.EnemyDifficulty.StrengthEffectLvL", SpawnEntities_EnemyDifficulty_StrengthEffectLvL);
 		config.set("SpawnEntities.EnemyDifficulty.GlowingEffect", SpawnEntities_EnemyDifficulty_GlowingEffect);
@@ -274,6 +303,7 @@ public class DifficultyPlugin extends JavaPlugin {
 		config.set("SpawnEntities.EnemyDifficulty.CreepersCharged", SpawnEntities_EnemyDifficulty_CreepersCharged);
 		config.set("SpawnEntities.EnemyDifficulty.EndermansAgressives", SpawnEntities_EnemyDifficulty_EndermansAgressives);
 		config.set("SpawnEntities.EnemyDifficulty.PigsArePigmansAgressives", SpawnEntities_EnemyDifficulty_PigsArePigmansAgressives);
+		config.set("SpawnEntities.EnemyDifficulty.VillagerTrades", SpawnEntities_EnemyDifficulty_VillagerTrades);
 
 		config.set("SpawnEntities.DistanceEnemyDifficulty.Trigger", SpawnEntities_DistanceEnemyDifficulty_Trigger);
 		config.set("SpawnEntities.DistanceEnemyDifficulty.Period", SpawnEntities_DistanceEnemyDifficulty_Period);
