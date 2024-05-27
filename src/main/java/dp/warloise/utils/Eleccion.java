@@ -597,7 +597,7 @@ public class Eleccion {
         generalWinner=0;
 
     }
-    public void ElectionMainWinnersPerVote(){
+    public void ElectionMainWinnersPerVote() {
         switch (eleccionNum){
             case 1:
                 for (Player votador1 : vote1List){
@@ -899,7 +899,6 @@ public class Eleccion {
         clearList(2);
         clearList(3);
     }
-
     public void StartElectionMainIndividual(Inventory menu) {
         new BukkitRunnable() {
             public void run() {
@@ -951,7 +950,6 @@ public class Eleccion {
             }
         }.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
     }
-
     public void StartElectionMainGeneral(Inventory menu) {
         new BukkitRunnable() {
             public void run() {
@@ -1012,6 +1010,8 @@ public class Eleccion {
         }.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
     }
 
+    //Efectos passivos
+
     public void movementPassive(){
         movementPassive = new BukkitRunnable() {
             public void run() {
@@ -1045,6 +1045,7 @@ public class Eleccion {
             }
         }.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
     }
+
 
     //Corrupted Events
     public void esquizoPassive() {
@@ -1243,11 +1244,9 @@ public class Eleccion {
 
 
 
-
     public static void playerFreeze(Player jugador){
         jugador.setFreezeTicks(jugador.getMaxFreezeTicks()+100);
     }
-
     public static void playerHeat(Player jugador){
         jugador.setFireTicks(100);
         //jugador.setVisualFire(true);
