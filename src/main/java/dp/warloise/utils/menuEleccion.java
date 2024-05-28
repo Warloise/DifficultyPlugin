@@ -1,11 +1,9 @@
 package dp.warloise.utils;
 
 import dp.warloise.DifficultyPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,10 +26,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 
 import static dp.warloise.DifficultyPlugin.*;
+import static org.bukkit.Bukkit.getLogger;
 
 public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     private final DifficultyPlugin plugin;
@@ -159,6 +159,25 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
     static ItemStack electionItem78 = createItem(Material.TURTLE_HELMET, "Maestro Tortuga",1,null, "Obtendras:", "- Resistencia 5","-Lentitud 5","Durante 2 minutos");
     static ItemStack electionItem79 = createItem(Material.BLACKSTONE, "Pajaro loco",1,null, "Obtendras:", "- Velocidad 5","-Debilidad 5","Durante 2 minutos");
     static ItemStack electionItem80 = createItem(Material.FEATHER, "Manos de dulce, pero del duro",1,null, "Obtendras:", "- Fuerza 5","-Fatiga Minera 5","Durante 2 minutos");
+
+    static ItemStack electionItem81 = createItem(Material.BARRIER, "No hacer nada",1,null, "/do ¿passaria algo?", "/do 99,93% que no passaria nada");
+    static ItemStack electionItem82 = createItem(Material.GOLDEN_APPLE, "Gamerule naturalRegeneration OFF",1,null, "Gamerule natural regeneration", "Ta en false","Como si fuera un UHC, pero sin serlo");
+    static ItemStack electionItem82_e = createItem(Material.GOLDEN_APPLE, "Gamerule naturalRegeneration ON",1,Enchantment.MENDING, "Gamerule natural regeneration", "Ta en true","Como de normal");
+
+    static ItemStack electionItem83 = createItem(Material.CAMPFIRE, "Fogata=Faro=Daño",1,null, "La fogata actuarà como un faro magico,", "En este caso te otorga daño cerca de ella");
+    static ItemStack electionItem84 = createItem(Material.CAMPFIRE, "Fogata=Faro=Regeneración",1,null, "La fogata actuarà como un faro magico,", "En este caso te otorga regeneración cerca de ella");
+    static ItemStack electionItem85 = createItem(Material.CAMPFIRE, "Fogata=Faro=Prisa Minera",1,null, "La fogata actuarà como un faro magico,", "En este caso te otorga prisa minera cerca de ella");
+
+    static ItemStack electionItem86 = createItem(Material.CLOCK, "RandomTickSpeed LOW",1,null, "Determina la frecuencia de un tick,", "como por ejemplo el crecimiento vegetal, la caída de hojas, etc.","Tendra el valor de 1");
+    static ItemStack electionItem87 = createItem(Material.CLOCK, "RandomTickSpeed DEFAULT",1,null, "Determina la frecuencia de un tick,", "como por ejemplo el crecimiento vegetal, la caída de hojas, etc.","Tendra el valor de 3");
+    static ItemStack electionItem88 = createItem(Material.CLOCK, "RandomTickSpeed HIGH",1,null, "Determina la frecuencia de un tick,", "como por ejemplo el crecimiento vegetal, la caída de hojas, etc.","Tendra el valor de 40");
+
+    static ItemStack electionItem89 = createItem(Material.LIME_BED, "PlayersSleepingPercentage 1%",1,null, "Determina la cantidad de jugadores", "para saltar una noche.");
+    static ItemStack electionItem90 = createItem(Material.YELLOW_BED, "PlayersSleepingPercentage 50%",1,null, "Determina la cantidad de jugadores", "para saltar una noche.");
+    static ItemStack electionItem91 = createItem(Material.RED_BED, "PlayersSleepingPercentage 100%",1,null, "Determina la cantidad de jugadores", "para saltar una noche.");
+
+    static ItemStack electionItem92 = createItem(Material.BARRIER, "No ya esta bien como esta",1,null, "No activaremos el pvp ahora", "Mas tarde quizas...");
+    static ItemStack electionItem93 = createItem(Material.NETHERITE_SWORD, "¡¡ACTIVA EL PVP!!",9,Enchantment.DAMAGE_ALL, "Siiiiii porfavor,", "quiero matar al niño","Quiero piliar");
 
 
     public menuEleccion(DifficultyPlugin plugin) {
@@ -957,6 +976,128 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
                     player.closeInventory();
                 }
                 break;
+            case 29:
+                if (clickedItem.equals(electionItem81)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem82)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem82_e)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 30:
+                if (clickedItem.equals(electionItem83)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem84)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem85)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 31:
+                if (clickedItem.equals(electionItem86)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem87)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem88)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 32:
+                if (clickedItem.equals(electionItem89)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem90)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem91)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote3List().contains(player)){
+                        objetoEleccion.addPlayer(3,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
+            case 33:
+                if (clickedItem.equals(electionItem92)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote1List().contains(player)){
+                        objetoEleccion.addPlayer(1,player);
+                    }
+                    player.closeInventory();
+                }
+                if (clickedItem.equals(electionItem93)) {
+                    //player.sendMessage("¡Has seleccionado el Pico de Diamante!");
+                    //player.getInventory().addItem(createItem(Material.DIAMOND_PICKAXE, "Pico de Diamante", "¡Rompe cualquier cosa!", "¡El favorito de los mineros!"));
+                    if (!objetoEleccion.getVote2List().contains(player)){
+                        objetoEleccion.addPlayer(2,player);
+                    }
+                    player.closeInventory();
+                }
+                break;
         }
         event.setCancelled(true);
     }
@@ -1237,6 +1378,57 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
         menu.setItem(6, electionItem80);
         return menu;
     }
+    public static Inventory createMenu29(){
+        objetoEleccion.setEleccionNum(29);
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        World world = Bukkit.getWorlds().get(0); // Obtener el mundo por defecto
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem81);
+        if (world != null) {
+            String gameRuleValue = world.getGameRuleValue("naturalRegeneration");
+            if (gameRuleValue != null && gameRuleValue.equalsIgnoreCase("true")) {
+                menu.setItem(6, electionItem82_e);
+            } else {
+                menu.setItem(6, electionItem82);
+            }
+        }
+        return menu;
+    }
+    public static Inventory createMenu30(){
+        objetoEleccion.setEleccionNum(30);
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem83);
+        menu.setItem(4, electionItem84);
+        menu.setItem(6, electionItem85);
+        return menu;
+    }
+    public static Inventory createMenu31(){
+        objetoEleccion.setEleccionNum(31);
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem86);
+        menu.setItem(4, electionItem87);
+        menu.setItem(6, electionItem88);
+        return menu;
+    }
+    public static Inventory createMenu32(){
+        objetoEleccion.setEleccionNum(32);
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem89);
+        menu.setItem(4, electionItem90);
+        menu.setItem(6, electionItem91);
+        return menu;
+    }
+    public static Inventory createMenu33(){
+        objetoEleccion.setEleccionNum(33);
+        menu = Bukkit.createInventory(null, 9, "Selecciona un item");
+        // Centrar los ítems en el menú
+        menu.setItem(2, electionItem92);
+        menu.setItem(6, electionItem93);
+        return menu;
+    }
 
     public static ItemStack createItem(Material material, String name,int level, Enchantment enchant, String... loreText) {
         ItemStack item = new ItemStack(material);
@@ -1314,8 +1506,38 @@ public class menuEleccion implements CommandExecutor, TabCompleter, Listener {
             playerLastMoveTime.put(player, System.currentTimeMillis());
             increaseXP(player);
         }
-
-
+        if(objetoEleccion.fogataPassiveNum!=0){
+            // Obtener la posición del jugador
+            Vector playerLocation = event.getPlayer().getLocation().toVector();
+            // Definir el radio de búsqueda
+            int radius = 10;
+            // Recorrer los bloques dentro del radio
+            for (int x = -radius; x <= radius; x++) {
+                for (int y = -radius; y <= radius; y++) {
+                    for (int z = -radius; z <= radius; z++) {
+                        Block block = event.getPlayer().getLocation().add(x, y, z).getBlock();
+                        if (block.getType() == Material.CAMPFIRE || block.getType() == Material.SOUL_CAMPFIRE) {
+                            // Verificar la distancia exacta
+                            if (playerLocation.distance(block.getLocation().toVector()) <= radius) {
+                                if(objetoEleccion.fogataPassiveNum==1){
+                                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100, 1, true, true));
+                                    return; // Salir del método si se encuentra una fogata cercana
+                                }
+                                if(objetoEleccion.fogataPassiveNum==2){
+                                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 1, true, true));
+                                    return; // Salir del método si se encuentra una fogata cercana
+                                }
+                                if(objetoEleccion.fogataPassiveNum==3){
+                                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100, 1, true, true));
+                                    return; // Salir del método si se encuentra una fogata cercana
+                                }
+                                return; // Salir del método si se encuentra una fogata cercana
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     private void repairArmor(Player player) {
         for (ItemStack item : player.getInventory().getArmorContents()) {

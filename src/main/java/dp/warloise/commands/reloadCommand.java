@@ -61,6 +61,9 @@ public class reloadCommand implements CommandExecutor {
         time_hours=plugin.getConfig().getInt("SpawnEntities.TimeEnemyDifficulty.HoursSaved");
         time_min=plugin.getConfig().getInt("SpawnEntities.TimeEnemyDifficulty.MinutesSaved");
         time_sec=plugin.getConfig().getInt("SpawnEntities.TimeEnemyDifficulty.SecondsSaved");
+        randomElection_Trigger = plugin.getConfig().getBoolean("Elections.RandomElections");
+        electionBlackList = config.getIntegerList("Elections.NumberBlackList");
+        cooldownElection = plugin.getConfig().getInt("Elections.CooldownElections");
         plugin.reloadConfig();
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "La configuración se ha recargado correctamente."));
         return true;

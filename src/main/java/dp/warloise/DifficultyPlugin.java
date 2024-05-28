@@ -16,6 +16,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static dp.warloise.utils.menuEleccion.*;
 
@@ -25,11 +27,13 @@ public class DifficultyPlugin extends JavaPlugin {
 
 	//Try
 	public static Eleccion objetoEleccion;
+	public static int lastElection = 0;
 
 	public static int time_days=0;
 	public static int time_hours=0;
 	public static int time_min=0;
 	public static int time_sec=0;
+	public static int time_sec_Elections=0;
 
 
 	public static boolean SpawnEntities_EnemyDifficulty_Trigger=false;
@@ -66,11 +70,13 @@ public class DifficultyPlugin extends JavaPlugin {
 	public static int Huracane_CenterY=0;
 	public static int Huracane_CenterZ=0;
 
-	public static String prefix="&8[&c&lDifficultyPlugin&8] ";
+	public static String prefix="&8[&c&lGen_W&8] ";
 	private String version = getDescription().getVersion();
-
 	public static File configFile;
 	public static FileConfiguration config;
+	public static List<Integer> electionBlackList = List.of();
+	public static int cooldownElection = 60*5;
+	public static boolean randomElection_Trigger = false;
 
 	public void onEnable() {
 		objetoEleccion=new Eleccion(this);
@@ -139,6 +145,11 @@ public class DifficultyPlugin extends JavaPlugin {
 				config.set("Huracane.DamageScale",1);
 				config.set("Huracane.Period",500);
 
+				config.set("Elections.NumberBlackList",electionBlackList);
+				config.set("Elections.CooldownElections",cooldownElection);
+				config.set("Elections.RandomElections",randomElection_Trigger);
+
+
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -196,6 +207,9 @@ public class DifficultyPlugin extends JavaPlugin {
 		time_hours=getConfig().getInt("SpawnEntities.TimeEnemyDifficulty.HoursSaved");
 		time_min=getConfig().getInt("SpawnEntities.TimeEnemyDifficulty.MinutesSaved");
 		time_sec=getConfig().getInt("SpawnEntities.TimeEnemyDifficulty.SecondsSaved");
+		randomElection_Trigger = getConfig().getBoolean("Elections.RandomElections");
+		electionBlackList = config.getIntegerList("Elections.NumberBlackList");
+		cooldownElection = getConfig().getInt("Elections.CooldownElections");
 		this.saveConfig();
 	}
 
@@ -266,7 +280,13 @@ public class DifficultyPlugin extends JavaPlugin {
 						time_hours = 0;
 					}
 				}
-				//Bukkit.getConsoleSender().sendMessage("Time--> D: "+time_days+" H: "+time_hours+" M: "+time_min+" S: "+time_sec);
+				if(getConfig().getBoolean("Elections.RandomElections")){
+					time_sec_Elections++;
+					if(time_sec_Elections==cooldownElection){
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "selectionelection random");
+						time_sec_Elections=0;
+					}
+				}
 			}
 		}.runTaskTimer(this, 0, 20); // 0 indica que la tarea comenzará en el próximo tick
 		// 20 indica que la tarea se repetirá cada 1 segundo
@@ -318,6 +338,11 @@ public class DifficultyPlugin extends JavaPlugin {
 		config.set("Huracane.Center.X",Huracane_CenterX);
 		config.set("Huracane.Center.Y",Huracane_CenterY);
 		config.set("Huracane.Center.Z",Huracane_CenterZ);
+		config.set("Elections.NumberBlackList",electionBlackList);
+		config.set("Elections.CooldownElections",cooldownElection);
+		config.set("Elections.RandomElections",randomElection_Trigger);
+
+
 		this.saveConfig();
 
 	}
@@ -336,7 +361,8 @@ public class DifficultyPlugin extends JavaPlugin {
 
 	public static void SendAllPlayerMessage(String message) {
 		for (Player jugador : Bukkit.getOnlinePlayers()) {
-			jugador.sendMessage(message);
+			jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix +"&l"+message));
+
 		}
 	}
 

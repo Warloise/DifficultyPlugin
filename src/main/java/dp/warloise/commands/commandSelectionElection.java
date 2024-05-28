@@ -31,7 +31,11 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
             return true;
         }
         if (args[0].equals("random")){
-            int randomNum = (int) (Math.random() * 28) + 1;
+            int randomNum = (int) (Math.random() * 33) + 1;
+            while(electionBlackList.contains(randomNum) && lastElection!=randomNum){
+                randomNum = (int) (Math.random() * 33) + 1;
+            }
+            lastElection = randomNum;
             switch (randomNum) {
                 case 1:
                     objetoEleccion.StartElectionMainIndividual(createMenu1());
@@ -121,6 +125,35 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
                 case 28:
                     objetoEleccion.StartElectionMainIndividual(createMenu28());
                     break;
+                case 29:
+                    objetoEleccion.StartElectionMainGeneral(createMenu29());
+                    break;
+                case 30:
+                    objetoEleccion.StartElectionMainGeneral(createMenu30());
+                    break;
+                case 31:
+                    objetoEleccion.StartElectionMainGeneral(createMenu31());
+                    break;
+                case 32:
+                    objetoEleccion.StartElectionMainGeneral(createMenu32());
+                    break;
+                case 33:
+                    objetoEleccion.StartElectionMainGeneral(createMenu33());
+                    break;
+            }
+
+            if(args.length>=2 && args[1].equals("true")){
+                randomElection_Trigger = true;
+                config.set("Elections.RandomElections", true);
+                plugin.saveConfig();
+                plugin.reloadConfig();
+                time_sec_Elections=0;
+            }else if(args.length>=2 && args[1].equals("false")){
+                randomElection_Trigger = false;
+                config.set("Elections.RandomElections", false);
+                plugin.saveConfig();
+                plugin.reloadConfig();
+                time_sec_Elections=0;
             }
         }
         if (args[0].equals("election1")){
@@ -211,6 +244,21 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         if (args[0].equals("election28")){
             objetoEleccion.StartElectionMainIndividual(createMenu28());
         }
+        if (args[0].equals("election29")){
+            objetoEleccion.StartElectionMainGeneral(createMenu29());
+        }
+        if (args[0].equals("election30")){
+            objetoEleccion.StartElectionMainGeneral(createMenu30());
+        }
+        if (args[0].equals("election31")){
+            objetoEleccion.StartElectionMainGeneral(createMenu31());
+        }
+        if (args[0].equals("election32")){
+            objetoEleccion.StartElectionMainGeneral(createMenu32());
+        }
+        if (args[0].equals("election33")){
+            objetoEleccion.StartElectionMainGeneral(createMenu33());
+        }
         return true;
     }
     @Override
@@ -218,7 +266,7 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             completions.add("random");
-            for (int i=1;i<=28;i++){
+            for (int i=1;i<=33;i++){
                 completions.add("election"+i);
             }
         }

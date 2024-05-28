@@ -2,6 +2,7 @@ package dp.warloise.commands;
 
 
 import dp.warloise.DifficultyPlugin;
+import dp.warloise.utils.Eleccion;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -105,6 +106,12 @@ public class corruptedEventCommand implements CommandExecutor, TabCompleter {
         	objetoEleccion.event_movement_xp = false;
         	SendAllPlayerMessage("Ya puedes moverte con normalidad...");
         }
+        if(args[0].equals("fogatasCancel")){
+            Eleccion.fogatasPassive.cancel();
+            objetoEleccion.fogataPassiveNum=0;
+            objetoEleccion.setContadorSecundario(0);
+            SendAllPlayerMessage("Las fogatas vuelven a la normalidad");
+        }
         return true;
     }
     @Override
@@ -115,8 +122,18 @@ public class corruptedEventCommand implements CommandExecutor, TabCompleter {
         completions.add("dangerJump");
         completions.add("freezeNight");
         completions.add("heatDay");
-        completions.add("MixingInventory");
-        completions.add("simonDice");
+        completions.add("movementPassive");
+        completions.add("fogatasCancel");
+        completions.add("claustrofobia");
+        completions.add("esquizofrenia");
+        completions.add("acrofobia");
+
+
+
+
+
+
+
 
         // Return a list of completions based on the user's input
         return completions;

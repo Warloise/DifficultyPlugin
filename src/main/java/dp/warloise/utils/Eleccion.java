@@ -18,6 +18,7 @@ import java.util.Random;
 import java.util.Vector;
 import static dp.warloise.DifficultyPlugin.*;
 import static dp.warloise.utils.menuEleccion.*;
+import static org.bukkit.Bukkit.getLogger;
 
 public class Eleccion {
 
@@ -29,7 +30,10 @@ public class Eleccion {
     public Vector<Player> claustroList = new Vector<>();
     public Vector<Player> acroList = new Vector<>();
     private int contador = 10;
+
+
     private int contadorSecundario = 0;
+    private int contadorSecundario_Fogatas = 0;
     private int eleccionNum = 0;
     private int state = 0;
     private Inventory menu;
@@ -61,6 +65,8 @@ public class Eleccion {
 
     //Passives
     public BukkitRunnable movementPassive;
+    public static BukkitRunnable fogatasPassive;
+    public int fogataPassiveNum=0;
 
 
     private int event_movement_time = 0;
@@ -267,9 +273,18 @@ public class Eleccion {
     public void setEvent_acrofobia(boolean event_acrofobia) {
         this.event_acrofobia = event_acrofobia;
     }
+    public int getContadorSecundario() {
+        return contadorSecundario;
+    }
+
+    public void setContadorSecundario(int contadorSecundario) {
+        this.contadorSecundario = contadorSecundario;
+    }
 
 
     public void ElectionMainWinners() {
+        World world = Bukkit.getWorlds().get(0); // Obtener el mundo por defecto
+        Player[] jugadores = Bukkit.getOnlinePlayers().toArray(new Player[0]);
         switch (eleccionNum) {
             case 2:
                 switch (generalWinner) {
@@ -338,7 +353,6 @@ public class Eleccion {
                 }
                 break;
             case 11:
-                Player[] jugadores = Bukkit.getOnlinePlayers().toArray(new Player[0]);
                 switch (generalWinner) {
                     case 1:
                         SendAllPlayerMessage("Te he dicho que no passaria nada...");
@@ -380,7 +394,6 @@ public class Eleccion {
                     case 1:
                         // Obtener el mundo principal del servidor
                         // Activar una tormenta en el mundo principal
-                        World world = Bukkit.getWorlds().get(0);
                         world.setStorm(true);
                         world.setThundering(true); // Opcional: activar truenos junto con la tormenta
                         break;
@@ -417,7 +430,6 @@ public class Eleccion {
                 switch (generalWinner) {
                     case 1:
                         // Obtener el mundo principal del servidor
-                        World world = Bukkit.getWorlds().get(0);
                         // Establecer el doDaylightCycle en false
                         world.setGameRule(GameRule.KEEP_INVENTORY, false);
                         SendAllPlayerMessage("Se ha decidido que al morir explotes como palomita...");
@@ -438,7 +450,6 @@ public class Eleccion {
                 switch (generalWinner) {
                     case 1:
                         // Obtener el mundo principal del servidor
-                        World world = Bukkit.getWorlds().get(0);
                         if (Boolean.TRUE.equals(world.getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE))) {
                             SendAllPlayerMessage("Pues no pasa nada");
                             world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
@@ -590,12 +601,109 @@ public class Eleccion {
                     plugin.reloadConfig();
                 }
                 break;
+            case 29:
+                switch (generalWinner) {
+                    case 1:
+                        SendAllPlayerMessage("Te he dicho que no passaria nada...");
+                    case 2:
+                        if (world != null) {
+                            String gameRuleValue = world.getGameRuleValue("naturalRegeneration");
+                            if (gameRuleValue != null) {
+                                if (gameRuleValue.equalsIgnoreCase("true")) {
+                                    world.setGameRuleValue("naturalRegeneration", "false");
+                                } else {
+                                    world.setGameRuleValue("naturalRegeneration", "true");
+                                }
+                            }
+                        }
+                        break;
+                }
+                break;
+            case 30:
+                switch (generalWinner) {
+                    case 1:
+                        FogatasFaroPassive();
+                        fogataPassiveNum=1;
+                        break;
+                    case 2:
+                        FogatasFaroPassive();
+                        fogataPassiveNum=2;
+                        break;
+                    case 3:
+                        FogatasFaroPassive();
+                        fogataPassiveNum=3;
+                        break;
+                }
+                break;
+            case 31:
+                switch (generalWinner) {
+                    case 1:
+                        if (world != null) {
+                            String gameRuleValue = world.getGameRuleValue("randomTickSpeed");
+                            if (gameRuleValue != null) {
+                                world.setGameRuleValue("randomTickSpeed", "1");
+                            }
+                        }
+                        break;
+                    case 2:
+                        if (world != null) {
+                            String gameRuleValue = world.getGameRuleValue("randomTickSpeed");
+                            if (gameRuleValue != null) {
+                                world.setGameRuleValue("randomTickSpeed", "3");
+                            }
+                        }
+                        break;
+                    case 3:
+                        if (world != null) {
+                            String gameRuleValue = world.getGameRuleValue("randomTickSpeed");
+                            if (gameRuleValue != null) {
+                                world.setGameRuleValue("randomTickSpeed", "40");
+                            }
+                        }
+                        break;
+                }
+                break;
+            case 32:
+                switch (generalWinner) {
+                    case 1:
+                        if (world != null) {
+                            String gameRuleValue = world.getGameRuleValue("playersSleepingPercentage");
+                            if (gameRuleValue != null) {
+                                world.setGameRuleValue("playersSleepingPercentage", "1");
+                            }
+                        }
+                        break;
+                    case 2:
+                        if (world != null) {
+                            String gameRuleValue = world.getGameRuleValue("playersSleepingPercentage");
+                            if (gameRuleValue != null) {
+                                world.setGameRuleValue("playersSleepingPercentage", "50");
+                            }
+                        }
+                        break;
+                    case 3:
+                        if (world != null) {
+                            String gameRuleValue = world.getGameRuleValue("playersSleepingPercentage");
+                            if (gameRuleValue != null) {
+                                world.setGameRuleValue("playersSleepingPercentage", "100");
+                            }
+                        }
+                        break;
+                }
+                break;
+            case 33:
+                switch(generalWinner){
+                    case 1:
+                        SendAllPlayerMessage("No hay pvp, el pueblo ha hablado");
+                        break;
+                    case 2:
+                        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "function mce2:announce/pvp_on");
+                        break;
+                }
         }
         eleccionNum = 0;
         generalWinner = 0;
-
     }
-
     public void ElectionMainWinnersPerVote() {
         switch (eleccionNum) {
             case 1:
@@ -912,387 +1020,401 @@ public class Eleccion {
         clearList(1);
         clearList(2);
         clearList(3);
-}
-        public void StartElectionMainIndividual(Inventory menu) {
-            new BukkitRunnable() {
-                public void run() {
-                    if (state == 0) {
-                        for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "La votación Individual empieza en..." + contador));
-                        }
-                        contador--;
-                        if (contador <= 0) {
-                            state = 1;
-                            contador=30;
-                        }
+    }
+
+    public void StartElectionMainIndividual(Inventory menu) {
+        new BukkitRunnable() {
+            public void run() {
+                if (state == 0) {
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "La votación Individual empieza en..." + contador));
                     }
-                    if (state == 1) {
-                        for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.openInventory(menu);
-                        }
-                        state = 2;
+                    contador--;
+                    if (contador <= 0) {
+                        state = 1;
+                        contador=30;
                     }
-                    if (state == 2) {
-                        contador--;
-                        for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "La votación termina en: " + contador));
-                        }
-                        if (contador <= 0) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.closeInventory();
-                            }
-                            contador = 10;
-                            state = 3;
-                        }
+                }
+                if (state == 1) {
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        jugador.openInventory(menu);
                     }
-                    if (state == 3) {
+                    state = 2;
+                }
+                if (state == 2) {
+                    contador--;
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "La votación termina en: " + contador));
+                    }
+                    if (contador <= 0) {
                         for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "Aqui tienes tu premio"));
-                            //Ganadores votelist
-                            ElectionMainWinnersPerVote();
+                            jugador.closeInventory();
                         }
+                        contador = 10;
+                        state = 3;
+                    }
+                }
+                if (state == 3) {
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "Aqui tienes tu premio"));
+                        //Ganadores votelist
+                        ElectionMainWinnersPerVote();
+                    }
+                    state = 4;
+                }
+                if (state == 4){
+                    contador = 10;
+                    //clearList(1);
+                    //clearList(2);
+                    //clearList(3);
+                    state = 0;
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
+    }
+    public void StartElectionMainGeneral(Inventory menu) {
+        new BukkitRunnable() {
+            public void run() {
+                if (state == 0) {
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "La votación General empieza en..." + contador));
+                    }
+                    contador--;
+                    if (contador <= 0) {
+                        state = 1;
+                        contador=30;
+                    }
+                }
+                if (state == 1) {
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        jugador.openInventory(menu);
+                    }
+                    state = 2;
+                }
+                if (state == 2) {
+                    contador--;
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "La votación termina en: " + contador));
+                    }
+                    if (contador <= 0) {
+                        for (Player jugador : Bukkit.getOnlinePlayers()) {
+                            jugador.closeInventory();
+                        }
+                        contador = 10;
+                        state = 3;
+                    }
+                }
+                if (state == 3) {
+                    maxVotes = Math.max(vote1List.size(), vote2List.size());
+                    maxVotes = Math.max(maxVotes, vote3List.size());
+                    if (maxVotes == vote1List.size()) {
+                        generalWinner = 1;
+                        state = 4;
+                    } else if (maxVotes == vote2List.size()) {
+                        generalWinner = 2;
+                        state = 4;
+                    } else {
+                        generalWinner = 3;
                         state = 4;
                     }
-                    if (state == 4){
-                        contador = 10;
-                        //clearList(1);
-                        //clearList(2);
-                        //clearList(3);
-                        state = 0;
-                        this.cancel();
-                    }
                 }
-            }.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
-        }
-
-        public void StartElectionMainGeneral(Inventory menu) {
-            new BukkitRunnable() {
-                public void run() {
-                    if (state == 0) {
-                        for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "La votación General empieza en..." + contador));
-                        }
-                        contador--;
-                        if (contador <= 0) {
-                            state = 1;
-                            contador=30;
-                        }
-                    }
-                    if (state == 1) {
-                        for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.openInventory(menu);
-                        }
-                        state = 2;
-                    }
-                    if (state == 2) {
-                        contador--;
-                        for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "La votación termina en: " + contador));
-                        }
-                        if (contador <= 0) {
-                            for (Player jugador : Bukkit.getOnlinePlayers()) {
-                                jugador.closeInventory();
-                            }
-                            contador = 10;
-                            state = 3;
-                        }
-                    }
-                    if (state == 3) {
-                        maxVotes = Math.max(vote1List.size(), vote2List.size());
-                        maxVotes = Math.max(maxVotes, vote3List.size());
-                        if (maxVotes == vote1List.size()) {
-                            generalWinner = 1;
-                            state = 4;
-                        } else if (maxVotes == vote2List.size()) {
-                            generalWinner = 2;
-                            state = 4;
-                        } else {
-                            generalWinner = 3;
-                            state = 4;
-                        }
-                    }
-                    if (state == 4){
-                        ElectionMainWinners();
-                        maxVotes = 0;
-                        clearList(1);
-                        clearList(2);
-                        clearList(3);
-                        state = 0;
-                        contador=10;
-                        this.cancel();
-                    }
+                if (state == 4){
+                    ElectionMainWinners();
+                    maxVotes = 0;
+                    clearList(1);
+                    clearList(2);
+                    clearList(3);
+                    state = 0;
+                    contador=10;
+                    this.cancel();
                 }
-            }.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
-        }
-
-        //Efectos passivos
-
-        public void movementPassive(){
-            movementPassive = new BukkitRunnable() {
-                public void run() {
-                    event_movement_time++;
-                    if (event_movement_time>=(60*5)){
-                        event_movement_time = 0;
-                        event_movement_repair = false;
-                        event_movement_hunger = false;
-                        event_movement_xp = false;
-                        SendAllPlayerMessage("Ya puedes moverte con normalidad...");
-                        this.cancel();
-                    }
-                }
-            };
-            movementPassive.runTaskTimer(plugin,0,20);
-        }
-        public void DanoProlongadoPassive(){
-            new BukkitRunnable() {
-                public void run() {
-                    contadorSecundario++;
-                    if (contadorSecundario==5 || contadorSecundario==10 || contadorSecundario==15){
-                        for (Player jugador : Bukkit.getOnlinePlayers()) {
-                            jugador.damage(3.3);
-                            jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "Auch me da dolido"));
-                        }
-                    }
-                    if (contadorSecundario==15) {
-                        contadorSecundario = 0;
-                        this.cancel();
-                    }
-                }
-            }.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
-        }
+            }
+        }.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
+    }
 
 
-//Corrupted Events
-        public void esquizoPassive() {
-            new BukkitRunnable() {
-                public void run() {
-                    event_esquizofrenia_time++;
-                    if ((event_esquizofrenia_time%10)==0){
-                        for (Player esquizofrenico : esquizoList){
-                            reproducirSonidoAleatorio(esquizofrenico);
-                        }
-                    }
-                    if(event_esquizofrenia_time>=(60*2)){
-                        event_esquizofrenia_time = 0;
-                        esquizoList.clear();
-                        this.cancel();
-                    }
-                    if(!event_esquizofrenia){
-                        event_esquizofrenia_time = 0;
-                        esquizoList.clear();
-                        this.cancel();
+    //Efectos passivos
+    public void movementPassive(){
+        movementPassive = new BukkitRunnable() {
+            public void run() {
+                event_movement_time++;
+                if (event_movement_time>=(60*5)){
+                    event_movement_time = 0;
+                    event_movement_repair = false;
+                    event_movement_hunger = false;
+                    event_movement_xp = false;
+                    SendAllPlayerMessage("Ya puedes moverte con normalidad...");
+                    this.cancel();
+                }
+            }
+        };
+        movementPassive.runTaskTimer(plugin,0,20);
+    }
+    public void DanoProlongadoPassive(){
+        new BukkitRunnable() {
+            public void run() {
+                contadorSecundario++;
+                if (contadorSecundario==5 || contadorSecundario==10 || contadorSecundario==15){
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        jugador.damage(3.3);
+                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "Auch me da dolido"));
                     }
                 }
-            }.runTaskTimer(plugin, 0, 20);
-        }
-        public void claustroPassive(){
-            new BukkitRunnable() {
-                public void run() {
-                    event_claustrofobia_time++;
-                    for (Player claustrofobico : claustroList){
-                        claustrofobico.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 40, 1, true, false));
-                        if (claustrofobico.getRemainingAir()<=40) {
-                            claustrofobico.setRemainingAir(claustrofobico.getRemainingAir());
-                        }else{
-                            claustrofobico.setRemainingAir(claustrofobico.getRemainingAir() - 100);
-                        }
-                    }
-                    if(event_claustrofobia_time>=(60*2)){
-                        event_claustrofobia_time = 0;
-                        claustroList.clear();
-                        this.cancel();
-                    }
-                    if(!event_claustrofobia){
-                        event_claustrofobia_time = 0;
-                        claustroList.clear();
-                        this.cancel();
-                    }
+                if (contadorSecundario>=15) {
+                    contadorSecundario = 0;
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
+    }
+    public void FogatasFaroPassive(){
+        fogatasPassive=new BukkitRunnable() {
+            public void run() {
+                contadorSecundario_Fogatas++;
+                if (contadorSecundario_Fogatas>=60*5) {
+                    contadorSecundario_Fogatas = 0;
+                    fogataPassiveNum=0;
+                    SendAllPlayerMessage("Las fogatas vuelven a la normalidad");
+                    this.cancel();
+                }
+            }
+        };
+        fogatasPassive.runTaskTimer(plugin,0,20); // 0 indica que la tarea comenzará en el próximo tick
+    }
 
-                }
-            }.runTaskTimer(plugin,0,20);
-        }
-        public void acroPassive(){
-            new BukkitRunnable() {
-                public void run() {
-                    event_acrofobia_time++;
-                    if ((event_acrofobia_time%10)==0){
-                        for (Player acrofobico : acroList) {
-                            acrofobico.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 160, 1, true, false));
-                        }
-                    }
-                    if(event_acrofobia_time>=(60*2)){
-                        event_acrofobia_time = 0;
-                        acroList.clear();
-                        this.cancel();
-                    }
-                    if(!event_acrofobia){
-                        event_acrofobia_time = 0;
-                        acroList.clear();
-                        this.cancel();
-                    }
-                }
-            }.runTaskTimer(plugin,0,20);
-        }
-        public void highGravityPassive(){
-            new BukkitRunnable() {
-                public void run() {
-                    event_highGravity_time++;
-                    for (Player jugador : Bukkit.getOnlinePlayers()){
-                        if (!jugador.getGameMode().equals(GameMode.SPECTATOR)) {
-                            if (!jugador.isSneaking()) {
-                                jugador.sendMessage("¡¡Agachate!!");
-                                jugador.setSneaking(false);
-                                jugador.damage(1);
-                            }
-                        }
-                    }
-                    if (event_highGravity_time>=(60*5)){
-                        event_highGravity_time = 0;
-                        SendAllPlayerMessage("La gravedad ha vuelto a la normalidad");
-                        this.cancel();
-                    }
-                    if(!event_highGravity){
-                        event_highGravity_time = 0;
-                        this.cancel();
-                    }
 
+    //Corrupted Events
+    public void esquizoPassive() {
+        new BukkitRunnable() {
+            public void run() {
+                event_esquizofrenia_time++;
+                if ((event_esquizofrenia_time%10)==0){
+                    for (Player esquizofrenico : esquizoList){
+                        reproducirSonidoAleatorio(esquizofrenico);
+                    }
                 }
-            }.runTaskTimer(plugin,0,20);
-        }
-        public void acidRainPassive(){
-            new BukkitRunnable() {
-                public void run() {
-                    event_acidRain_time++;
-                    for (Player jugador : Bukkit.getOnlinePlayers()){
-                        if (acidRainHelp(jugador)){
+                if(event_esquizofrenia_time>=(60*2)){
+                    event_esquizofrenia_time = 0;
+                    esquizoList.clear();
+                    this.cancel();
+                }
+                if(!event_esquizofrenia){
+                    event_esquizofrenia_time = 0;
+                    esquizoList.clear();
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 0, 20);
+    }
+    public void claustroPassive(){
+        new BukkitRunnable() {
+            public void run() {
+                event_claustrofobia_time++;
+                for (Player claustrofobico : claustroList){
+                    claustrofobico.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 40, 1, true, false));
+                    if (claustrofobico.getRemainingAir()<=40) {
+                        claustrofobico.setRemainingAir(claustrofobico.getRemainingAir());
+                    }else{
+                        claustrofobico.setRemainingAir(claustrofobico.getRemainingAir() - 100);
+                    }
+                }
+                if(event_claustrofobia_time>=(60*2)){
+                    event_claustrofobia_time = 0;
+                    claustroList.clear();
+                    this.cancel();
+                }
+                if(!event_claustrofobia){
+                    event_claustrofobia_time = 0;
+                    claustroList.clear();
+                    this.cancel();
+                }
+
+            }
+        }.runTaskTimer(plugin,0,20);
+    }
+    public void acroPassive(){
+        new BukkitRunnable() {
+            public void run() {
+                event_acrofobia_time++;
+                if ((event_acrofobia_time%10)==0){
+                    for (Player acrofobico : acroList) {
+                        acrofobico.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 160, 1, true, false));
+                    }
+                }
+                if(event_acrofobia_time>=(60*2)){
+                    event_acrofobia_time = 0;
+                    acroList.clear();
+                    this.cancel();
+                }
+                if(!event_acrofobia){
+                    event_acrofobia_time = 0;
+                    acroList.clear();
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(plugin,0,20);
+    }
+    public void highGravityPassive(){
+        new BukkitRunnable() {
+            public void run() {
+                event_highGravity_time++;
+                for (Player jugador : Bukkit.getOnlinePlayers()){
+                    if (!jugador.getGameMode().equals(GameMode.SPECTATOR)) {
+                        if (!jugador.isSneaking()) {
+                            jugador.sendMessage("¡¡Agachate!!");
+                            jugador.setSneaking(false);
                             jugador.damage(1);
-                            // Calcular la posición de las partículas alrededor del jugador
-                            double radius = 0.5;
-                            for (double theta = 0; theta < Math.PI * 2; theta += Math.PI / 8) {
-                                double x = jugador.getLocation().getX() + radius * Math.cos(theta);
-                                double y = jugador.getLocation().getY() + 2; // Altura deseada de las partículas
-                                double z = jugador.getLocation().getZ() + radius * Math.sin(theta);
-                                jugador.getWorld().spawnParticle(Particle.SLIME, x, y, z, 1, 0, 0, 0, 0); // Agrega 0 para la velocidad en todas las direcciones
-                            }
-                            if (!jugador.getGameMode().equals(GameMode.SPECTATOR)){
-                                jugador.sendMessage("¡Cuidado te quemas con el acido!");
-                            }
                         }
                     }
-                    if (event_acidRain_time>=(60*5)){
-                        event_acidRain_time = 0;
-                        SendAllPlayerMessage("Ya ha passado la tormenta");
-                        this.cancel();
-                    }
-                    if(!event_acidRain){
-                        event_acidRain_time = 0;
-                        this.cancel();
-                    }
                 }
-            }.runTaskTimer(plugin,0,20);
-        }
-        public void dangerJumpPassive(){
-            new BukkitRunnable() {
-                public void run() {
-                    event_dangerJump_time++;
-                    if (event_dangerJump_time>=(60*5)){
-                        event_dangerJump_time = 0;
-                        event_dangerJump=false;
-                        this.cancel();
-                    }
-                    if(!event_dangerJump){
-                        event_dangerJump_time = 0;
-                        this.cancel();
-                    }
+                if (event_highGravity_time>=(60*5)){
+                    event_highGravity_time = 0;
+                    SendAllPlayerMessage("La gravedad ha vuelto a la normalidad");
+                    this.cancel();
                 }
-            }.runTaskTimer(plugin,0,20);
-        }
-        public void freezeNightPassive(){
-            new BukkitRunnable() {
-                public void run() {
-                    event_freezeNight_time++;
-                    for (Player jugador : Bukkit.getOnlinePlayers()){
-                        if (jugador.getLocation().getBlock().getLightLevel()<=5){
-                            playerFreeze(jugador);
-                            SendAllPlayerMessage("¡Busca un punto de luz para entrar en calor!");
+                if(!event_highGravity){
+                    event_highGravity_time = 0;
+                    this.cancel();
+                }
+
+            }
+        }.runTaskTimer(plugin,0,20);
+    }
+    public void acidRainPassive(){
+        new BukkitRunnable() {
+            public void run() {
+                event_acidRain_time++;
+                for (Player jugador : Bukkit.getOnlinePlayers()){
+                    if (acidRainHelp(jugador)){
+                        jugador.damage(1);
+                        // Calcular la posición de las partículas alrededor del jugador
+                        double radius = 0.5;
+                        for (double theta = 0; theta < Math.PI * 2; theta += Math.PI / 8) {
+                            double x = jugador.getLocation().getX() + radius * Math.cos(theta);
+                            double y = jugador.getLocation().getY() + 2; // Altura deseada de las partículas
+                            double z = jugador.getLocation().getZ() + radius * Math.sin(theta);
+                            jugador.getWorld().spawnParticle(Particle.SLIME, x, y, z, 1, 0, 0, 0, 0); // Agrega 0 para la velocidad en todas las direcciones
+                        }
+                        if (!jugador.getGameMode().equals(GameMode.SPECTATOR)){
+                            jugador.sendMessage("¡Cuidado te quemas con el acido!");
                         }
                     }
-                    if (event_freezeNight_time>=(60*10)){
-                        event_freezeNight_time = 0;
-                        SendAllPlayerMessage("Ya ha passado el frio...");
-                        this.cancel();
-                    }
-                    if(!event_freezeNight){
-                        event_freezeNight_time = 0;
-                        this.cancel();
-                    }
-
-
                 }
-            }.runTaskTimer(plugin,0,20);
-        }
-        public void heatDayPassive(){
-            new BukkitRunnable() {
-                public void run() {
-                    event_heatDay_time++;
-                    for (Player jugador : Bukkit.getOnlinePlayers()){
-                        if (jugador.getLocation().getBlock().getLightLevel()>=10){
-                            playerHeat(jugador);
-                            SendAllPlayerMessage("¡Alejate de la luz que hace mucho calor!");
-                        }
-                    }
-                    if (event_heatDay_time>=(60*10)){
-                        event_heatDay_time = 0;
-                        SendAllPlayerMessage("Ya no hace tanto calor...");
-                        this.cancel();
-                    }
-                    if(!event_heatDay){
-                        event_heatDay_time = 0;
-                        this.cancel();
-                    }
-
-
+                if (event_acidRain_time>=(60*5)){
+                    event_acidRain_time = 0;
+                    SendAllPlayerMessage("Ya ha passado la tormenta");
+                    this.cancel();
                 }
-            }.runTaskTimer(plugin,0,20);
-        }
+                if(!event_acidRain){
+                    event_acidRain_time = 0;
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(plugin,0,20);
+    }
+    public void dangerJumpPassive(){
+        new BukkitRunnable() {
+            public void run() {
+                event_dangerJump_time++;
+                if (event_dangerJump_time>=(60*5)){
+                    event_dangerJump_time = 0;
+                    event_dangerJump=false;
+                    this.cancel();
+                }
+                if(!event_dangerJump){
+                    event_dangerJump_time = 0;
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(plugin,0,20);
+    }
+    public void freezeNightPassive(){
+        new BukkitRunnable() {
+            public void run() {
+                event_freezeNight_time++;
+                for (Player jugador : Bukkit.getOnlinePlayers()){
+                    if (jugador.getLocation().getBlock().getLightLevel()<=5){
+                        playerFreeze(jugador);
+                        SendAllPlayerMessage("¡Busca un punto de luz para entrar en calor!");
+                    }
+                }
+                if (event_freezeNight_time>=(60*10)){
+                    event_freezeNight_time = 0;
+                    SendAllPlayerMessage("Ya ha passado el frio...");
+                    this.cancel();
+                }
+                if(!event_freezeNight){
+                    event_freezeNight_time = 0;
+                    this.cancel();
+                }
+
+
+            }
+        }.runTaskTimer(plugin,0,20);
+    }
+    public void heatDayPassive(){
+        new BukkitRunnable() {
+            public void run() {
+                event_heatDay_time++;
+                for (Player jugador : Bukkit.getOnlinePlayers()){
+                    if (jugador.getLocation().getBlock().getLightLevel()>=10){
+                        playerHeat(jugador);
+                        SendAllPlayerMessage("¡Alejate de la luz que hace mucho calor!");
+                    }
+                }
+                if (event_heatDay_time>=(60*10)){
+                    event_heatDay_time = 0;
+                    SendAllPlayerMessage("Ya no hace tanto calor...");
+                    this.cancel();
+                }
+                if(!event_heatDay){
+                    event_heatDay_time = 0;
+                    this.cancel();
+                }
+
+
+            }
+        }.runTaskTimer(plugin,0,20);
+    }
 
 
 
 
-        public static void playerFreeze(Player jugador){
-            jugador.setFreezeTicks(jugador.getMaxFreezeTicks()+100);
-        }
-        public static void playerHeat(Player jugador){
-            jugador.setFireTicks(100);
-            //jugador.setVisualFire(true);
-        }
-        public void reproducirSonidoAleatorio(Player jugador) {
-            Random rand = new Random();
-            int indiceSonido = rand.nextInt(sonidos.length);
-            Sound sonidoAleatorio = sonidos[indiceSonido];
-            // Reproducir el sonido para el jugador
-            jugador.playSound(jugador.getLocation(), sonidoAleatorio, 1.0f, 1.0f);
-        }
-        private void intercambiarInventarios(Player jugador1, Player jugador2) {
-            // Guardar los inventarios en variables temporales
-            ItemStack[] inventarioTemporalJugador1 = jugador1.getInventory().getContents().clone();
-            ItemStack[] inventarioTemporalJugador2 = jugador2.getInventory().getContents().clone();
-            // Borrar los inventarios de ambos jugadores
-            jugador1.getInventory().clear();
-            jugador2.getInventory().clear();
-            // Asignar los inventarios guardados a los jugadores opuestos
-            jugador1.getInventory().setContents(inventarioTemporalJugador2);
-            jugador2.getInventory().setContents(inventarioTemporalJugador1);
-        }
-        private void intercambiarPosiciones(Player jugador1, Player jugador2) {
-            // Guardar los inventarios en variables temporales
-            Location PosicionTemporalJugador1 = jugador1.getLocation();
-            Location PosicionTemporalJugador2 = jugador2.getLocation();
-            // Borrar los inventarios de ambos jugadores
-            jugador1.teleport(PosicionTemporalJugador2);
-            jugador2.teleport(PosicionTemporalJugador1);
-
-        }
+    public static void playerFreeze(Player jugador){
+        jugador.setFreezeTicks(jugador.getMaxFreezeTicks()+100);
+    }
+    public static void playerHeat(Player jugador){
+        jugador.setFireTicks(100);
+        //jugador.setVisualFire(true);
+    }
+    public void reproducirSonidoAleatorio(Player jugador) {
+        Random rand = new Random();
+        int indiceSonido = rand.nextInt(sonidos.length);
+        Sound sonidoAleatorio = sonidos[indiceSonido];
+        // Reproducir el sonido para el jugador
+        jugador.playSound(jugador.getLocation(), sonidoAleatorio, 1.0f, 1.0f);
+    }
+    private void intercambiarInventarios(Player jugador1, Player jugador2) {
+        // Guardar los inventarios en variables temporales
+        ItemStack[] inventarioTemporalJugador1 = jugador1.getInventory().getContents().clone();
+        ItemStack[] inventarioTemporalJugador2 = jugador2.getInventory().getContents().clone();
+        // Borrar los inventarios de ambos jugadores
+        jugador1.getInventory().clear();
+        jugador2.getInventory().clear();
+        // Asignar los inventarios guardados a los jugadores opuestos
+        jugador1.getInventory().setContents(inventarioTemporalJugador2);
+        jugador2.getInventory().setContents(inventarioTemporalJugador1);
+    }
+    private void intercambiarPosiciones(Player jugador1, Player jugador2) {
+        // Guardar los inventarios en variables temporales
+        Location PosicionTemporalJugador1 = jugador1.getLocation();
+        Location PosicionTemporalJugador2 = jugador2.getLocation();
+        // Borrar los inventarios de ambos jugadores
+        jugador1.teleport(PosicionTemporalJugador2);
+        jugador2.teleport(PosicionTemporalJugador1);
 
     }
+
+}
 
