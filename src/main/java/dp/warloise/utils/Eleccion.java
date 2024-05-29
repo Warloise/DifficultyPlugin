@@ -1015,6 +1015,80 @@ public class Eleccion {
                     votador3.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * (60 * 2), 4, true, true));
                 }
                 break;
+            case 34:
+                for (Player votador1 : vote1List) {
+                    for (int i = 0; i < 16; i++) {
+                        votador1.getInventory().addItem(createItem(Material.BAKED_POTATO, "Menu de Silence", 1, null, "Mmmmm si...", "Patatas..."));
+                    }
+                }
+                for (Player votador2 : vote2List) {
+                    for (int i = 0; i < 8; i++) {
+                        votador2.getInventory().addItem(createItem(Material.COOKED_BEEF, "Menu Filetaco", 1, null, "Vuelta y vuelta", "Lo he hecho yo mismo..."));
+                    }
+                }
+                for (Player votador3 : vote3List) {
+                    for (int i = 0; i < 32; i++) {
+                        votador3.getInventory().addItem(createItem(Material.DRIED_KELP, "Menu il mare", 1, null, "Parece papel", "Pero esta bueno lo juro"));
+                    }
+                }
+                break;
+            case 35:
+                for (Player votador1 : vote1List) {
+                    for (int i = 0; i < 5; i++) {
+                        votador1.getInventory().addItem(createItem(Material.CARROT, "Zanahorias", 1, null, "Planatas para tener mas"));
+                    }
+                }
+                for (Player votador2 : vote2List) {
+                    for (int i = 0; i < 5; i++) {
+                        votador2.getInventory().addItem(createItem(Material.POTATO, "Patatas", 1, null, "Planatas para tener mas"));
+                    }
+                }
+                for (Player votador3 : vote3List) {
+                    for (int i = 0; i < 5; i++) {
+                        votador3.getInventory().addItem(createItem(Material.SWEET_BERRIES, "Bayas dulces", 1, null, "Planatas para tener mas"));
+                    }
+                }
+                break;
+            case 36:
+                for (Player votador1 : vote1List) {
+                    votador1.getInventory().addItem(createItem(Material.PUMPKIN, "Calabasa", 1, null, "Haz lo que quieras com ella"));
+
+                }
+                for (Player votador2 : vote2List) {
+                    votador2.getInventory().addItem(createItem(Material.POTATO, "Melon tu", 1, null, "Haz lo que quieras com el"));
+                }
+                for (Player votador3 : vote3List) {
+                    votador3.getInventory().addItem(createItem(Material.BEEHIVE, "Nido de abejos", 1, null, "No hay abejos, eso los pones tu"));
+                }
+                break;
+            case 37:
+                for (Player votador1 : vote1List) {
+                    for (int i = 0; i < 10; i++) {
+                        votador1.getInventory().addItem(createItem(Material.COOKED_BEEF, "Filetaco", 1, null, "Para que no te mueras de hambre"));
+                    }
+                }
+                for (Player votador2 : vote2List) {
+                    for (int i = 0; i < 10; i++) {
+                        votador2.getInventory().addItem(createItem(Material.COOKED_MUTTON, "Corderito", 1, null, "Para que no te mueras de hambre"));
+                    }
+                }
+                for (Player votador3 : vote3List) {
+                    for (int i = 0; i < 10; i++) {
+                        votador3.getInventory().addItem(createItem(Material.COOKED_PORKCHOP, "Cerdo tu", 1, null, "Para que no te mueras de hambre"));
+                    }
+                }
+                break;
+            case 38:
+                for (Player votador1 : vote1List) {
+                    votador1.getInventory().addItem(createItem(Material.RECOVERY_COMPASS, "Brujula de Recuperación", 1, null, "¿Te imaginas saber donde has muerto?"));
+                }
+                for (Player votador2 : vote2List) {
+                    votador2.getInventory().addItem(createEnchantmentBook(1, Enchantment.MENDING));
+                }
+                for (Player votador3 : vote3List) {
+                    votador3.getInventory().addItem(createItem(Material.NETHER_STAR, "Brilla como una estrella", 1, null, "De ti para ti"));
+                }
+                break;
         }
         eleccionNum=0;
         clearList(1);
@@ -1056,7 +1130,7 @@ public class Eleccion {
                 }
                 if (state == 3) {
                     for (Player jugador : Bukkit.getOnlinePlayers()) {
-                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "Aqui tienes tu premio"));
+                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "Aquí tienes tu premio"));
                         //Ganadores votelist
                         ElectionMainWinnersPerVote();
                     }
@@ -1120,6 +1194,9 @@ public class Eleccion {
                     }
                 }
                 if (state == 4){
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        jugador.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "Se han cambiado las reglas del juego"));
+                    }
                     ElectionMainWinners();
                     maxVotes = 0;
                     clearList(1);

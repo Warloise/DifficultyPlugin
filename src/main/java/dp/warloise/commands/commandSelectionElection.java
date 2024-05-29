@@ -31,9 +31,9 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
             return true;
         }
         if (args[0].equals("random")){
-            int randomNum = (int) (Math.random() * 33) + 1;
+            int randomNum = (int) (Math.random() * 38) + 1;
             while(electionBlackList.contains(randomNum) && lastElection!=randomNum){
-                randomNum = (int) (Math.random() * 33) + 1;
+                randomNum = (int) (Math.random() * 38) + 1;
             }
             lastElection = randomNum;
             switch (randomNum) {
@@ -139,6 +139,21 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
                     break;
                 case 33:
                     objetoEleccion.StartElectionMainGeneral(createMenu33());
+                    break;
+                case 34:
+                    objetoEleccion.StartElectionMainIndividual(createMenu34());
+                    break;
+                case 35:
+                    objetoEleccion.StartElectionMainIndividual(createMenu35());
+                    break;
+                case 36:
+                    objetoEleccion.StartElectionMainIndividual(createMenu36());
+                    break;
+                case 37:
+                    objetoEleccion.StartElectionMainIndividual(createMenu37());
+                    break;
+                case 38:
+                    objetoEleccion.StartElectionMainIndividual(createMenu38());
                     break;
             }
 
@@ -259,6 +274,22 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         if (args[0].equals("election33")){
             objetoEleccion.StartElectionMainGeneral(createMenu33());
         }
+        if (args[0].equals("election34")){
+            objetoEleccion.StartElectionMainIndividual(createMenu34());
+        }
+        if (args[0].equals("election35")){
+            objetoEleccion.StartElectionMainIndividual(createMenu35());
+        }
+        if (args[0].equals("election36")){
+            objetoEleccion.StartElectionMainIndividual(createMenu36());
+        }
+        if (args[0].equals("election37")){
+            objetoEleccion.StartElectionMainIndividual(createMenu37());
+        }
+        if (args[0].equals("election38")){
+            objetoEleccion.StartElectionMainIndividual(createMenu38());
+        }
+
         return true;
     }
     @Override
@@ -266,7 +297,7 @@ public class commandSelectionElection implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             completions.add("random");
-            for (int i=1;i<=33;i++){
+            for (int i=1;i<=38;i++){
                 completions.add("election"+i);
             }
         }
